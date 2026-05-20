@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 학습방 - ConnectLearn</title>
+  <style>
+    /* Base Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: #fafafa; /* 시안의 옅은 배경색 */
+      color: #333;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 40px;
+      height: 64px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #eaeaea;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: #6a1b9a; /* ConnectLearn 보라색 */
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #666;
+    }
+
+    .nav-links li.active {
+      color: #6a1b9a;
+      font-weight: 700;
+      position: relative;
+    }
+
+    .nav-links li.active::after {
+      content: '';
+      position: absolute;
+      bottom: -22px; /* 헤더 높이에 맞춤 */
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: #6a1b9a;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: #555;
+    }
+
+    .icon-circle {
+      width: 32px;
+      height: 32px;
+      background-color: #e0e0e0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* Page Title */
+    .page-header {
+      margin-bottom: 30px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #111;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      color: #666;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 24px;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 30px;
+    }
+
+    .tab-item {
+      font-size: 15px;
+      font-weight: 600;
+      color: #888;
+      padding-bottom: 12px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .tab-item.active {
+      color: #6a1b9a;
+    }
+
+    .tab-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: #6a1b9a;
+    }
+
+    /* Course Grid */
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    /* Course Card */
+    .card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Card Thumbnail */
+    .card-thumbnail-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      background-color: #f0f0f0;
+    }
+
+    .card-thumbnail-wrapper img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #555;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    /* Card Body */
+    .card-body {
+      padding: 24px 20px;
+      flex-grow: 1; /* 컨텐츠 길이에 상관없이 푸터를 하단으로 밀어냄 */
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 12px;
+      line-height: 1.4;
+      /* 긴 제목 2줄 처리 */
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: auto; /* 남은 공간을 차지하여 하단 요소를 밑으로 밈 */
+    }
+
+    /* Card Footer (Mission Info) */
+    .card-footer {
+      padding: 16px 20px;
+      border-top: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .mission-label {
+      color: #666;
+      font-weight: 500;
+    }
+
+    .mission-count {
+      color: #111;
+      font-weight: 700;
+    }
+
+    /* Main Footer */
+    .site-footer {
+      background-color: #edf2f9; /* 시안 하단의 옅은 푸른색 */
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: #111;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .footer-links a {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .footer-copyright {
+      font-size: 13px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo">ConnectLearn</div>
+    <ul class="nav-links">
+      <li><a href="#">탐색</a></li>
+      <li class="active"><a href="#">내 학습방</a></li>
+      <li><a href="#">커뮤니티</a></li>
+    </ul>
+  </div>
+  <div class="header-right">
+    <span>🔍</span>
+    <span>🔔</span>
+    <span>❔</span>
+    <div class="icon-circle">👤</div>
+  </div>
+</header>
+
+<main>
+  <div class="page-header">
+    <h1 class="page-title">내 학습방</h1>
+    <p class="page-subtitle">현재 수강 중인 강좌의 진도와 미션을 확인하세요.</p>
+  </div>
+
+  <div class="tabs">
+    <div class="tab-item active">수강 중 (3)</div>
+    <div class="tab-item">완료된 강좌</div>
+    <div class="tab-item">찜한 강좌</div>
+  </div>
+
+  <div class="course-grid">
+
+    <article class="card">
+      <div class="card-thumbnail-wrapper">
+        <img src="https://via.placeholder.com/400x225/333/fff?text=React" alt="React 강좌">
+        <span class="badge">IT/프로그래밍</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">실전 React 완벽 가이드: 기초부터 Next.js까지</h2>
+        <p class="card-desc">모던 웹 개발을 위한 필수 기술 스택 마스터</p>
+      </div>
+      <div class="card-footer">
+        <span class="mission-label">PASS 미션</span>
+        <span class="mission-count">2 / 5 개</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-thumbnail-wrapper">
+        <img src="https://via.placeholder.com/400x225/eee/333?text=Data+Science" alt="데이터 사이언스 강좌">
+        <span class="badge">데이터 사이언스</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">파이썬을 활용한 비즈니스 데이터 분석</h2>
+        <p class="card-desc">실무 데이터를 바탕으로 한 인사이트 도출 기법</p>
+      </div>
+      <div class="card-footer">
+        <span class="mission-label">PASS 미션</span>
+        <span class="mission-count">4 / 4 개 (완료)</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-thumbnail-wrapper">
+        <img src="https://via.placeholder.com/400x225/555/fff?text=Agile" alt="애자일 강좌">
+        <span class="badge">비즈니스/기획</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">애자일(Agile) 프로젝트 관리 마스터클래스</h2>
+        <p class="card-desc">효율적인 팀 운영과 프로덕트 딜리버리 방법론</p>
+      </div>
+      <div class="card-footer">
+        <span class="mission-label">PASS 미션</span>
+        <span class="mission-count">0 / 3 개</span>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-logo">ConnectLearn</div>
+  <div class="footer-links">
+    <a href="#">회사 소개</a>
+    <a href="#">이용약관</a>
+    <a href="#">개인정보처리방침</a>
+    <a href="#">고객 센터</a>
+  </div>
+  <div class="footer-copyright">
+    &copy; 2024 ConnectLearn. 모든 권리 보유.
+  </div>
+</footer>
+
+</body>
+</html>
