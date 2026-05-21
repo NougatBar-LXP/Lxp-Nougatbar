@@ -10,13 +10,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ErrorResponse> handleBaseException(BaseException exception) {
         ErrorCode errorCode = exception.getErrorCode();
-        return ResponseEntity.status(errorCode.getStatus())
-                .body(ErrorResponse.from(errorCode));
+        return ResponseEntity.status(errorCode.getStatus()).body(ErrorResponse.from(errorCode));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
-        return ResponseEntity.badRequest()
-                .body(ErrorResponse.of(ErrorCode.INVALID_REQUEST, exception.getMessage()));
+        return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorCode.INVALID_REQUEST));
     }
 }
