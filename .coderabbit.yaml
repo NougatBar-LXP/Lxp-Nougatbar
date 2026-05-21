@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: "ko-KR"
+early_access: false
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  review_details: false
+  commit_status: true
+  collapse_walkthrough: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+    base_branches:
+      - ".*"
+    ignore_title_keywords:
+      - "WIP"
+      - "Draft"
+
+  path_filters:
+    - "!**/build/**"
+    - "!**/out/**"
+    - "!**/.gradle/**"
+    - "!**/generated/**"
+    - "!**/*.lock"
+
+  path_instructions:
+    - path: "src/main/java/**"
+      instructions: |
+        Java/Spring Boot 백엔드 코드 기준으로 리뷰한다.
+        다음 항목을 우선 확인한다.
+        - Controller에 비즈니스 로직이 과도하게 들어가지 않았는지
+        - Service의 트랜잭션 경계가 적절한지
+        - Entity와 DTO 책임이 섞이지 않았는지
+        - 예외 처리와 ErrorCode가 일관적인지
+        - null 처리와 입력 검증이 충분한지
+        - 테스트하기 어려운 강한 결합이 있는지
+
+    - path: "src/test/**"
+      instructions: |
+        테스트 코드를 리뷰한다.
+        다음 항목을 우선 확인한다.
+        - given/when/then 구조가 명확한지
+        - 구현 세부사항보다 행위를 검증하는지
+        - 정상 케이스와 예외 케이스가 함께 검증되는지
+        - 테스트 이름이 의도를 설명하는지
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
