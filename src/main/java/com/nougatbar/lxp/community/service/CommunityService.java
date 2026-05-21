@@ -1,15 +1,15 @@
 package com.nougatbar.lxp.community.service;
 
+import com.nougatbar.lxp.common.exception.BaseException;
+import com.nougatbar.lxp.common.exception.ErrorCode;
 import com.nougatbar.lxp.community.dto.request.CommunityCreateRequest;
 import com.nougatbar.lxp.community.dto.request.CommunityUpdateRequest;
 import com.nougatbar.lxp.community.dto.response.CommunityResponse;
 import com.nougatbar.lxp.community.entity.Community;
 import com.nougatbar.lxp.community.repository.CommunityRepository;
 import java.util.List;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional(readOnly = true)
@@ -39,8 +39,8 @@ public class CommunityService {
                 request.courseId(),
                 request.memberId(),
                 request.type(),
-                request.title().trim(),
-                request.content().trim()
+                request.title(),
+                request.content()
         );
 
         return CommunityResponse.from(communityRepository.save(community));
@@ -55,7 +55,7 @@ public class CommunityService {
         validateUpdateRequest(request);
 
         Community community = getCommunity(communityId);
-        community.update(request.title().trim(), request.content().trim());
+        community.update(request.title(), request.content());
         return CommunityResponse.from(community);
     }
 
@@ -67,7 +67,7 @@ public class CommunityService {
 
     private Community getCommunity(Long communityId) {
         return communityRepository.findById(communityId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Community not found."));
+                .orElseThrow(() -> new BaseException(ErrorCode.COMMUNITY_NOT_FOUND));
     }
 
     private void validateCreateRequest(CommunityCreateRequest request) {
@@ -77,16 +77,13 @@ public class CommunityService {
                 || request.type() == null
                 || isBlank(request.title())
                 || isBlank(request.content())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "courseId, memberId, type, title, and content are required."
-            );
+            throw new BaseException(ErrorCode.COMMUNITY_REQUIRED_VALUE_MISSING);
         }
     }
 
     private void validateUpdateRequest(CommunityUpdateRequest request) {
         if (request == null || isBlank(request.title()) || isBlank(request.content())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "title and content are required.");
+            throw new BaseException(ErrorCode.COMMUNITY_UPDATE_REQUIRED_VALUE_MISSING);
         }
     }
 

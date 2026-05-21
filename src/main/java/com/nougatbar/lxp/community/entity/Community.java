@@ -47,11 +47,11 @@ public class Community {
     }
 
     private Community(Long courseId, Long memberId, CommunityType type, String title, String content) {
-        this.courseId = courseId;
-        this.memberId = memberId;
-        this.type = type;
-        this.title = title;
-        this.content = content;
+        this.courseId = requireNonNull(courseId, "courseId");
+        this.memberId = requireNonNull(memberId, "memberId");
+        this.type = requireNonNull(type, "type");
+        this.title = requireNotBlank(title, "title");
+        this.content = requireNotBlank(content, "content");
     }
 
     public static Community create(Long courseId, Long memberId, CommunityType type, String title, String content) {
@@ -69,9 +69,25 @@ public class Community {
     }
 
     public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
+        this.title = requireNotBlank(title, "title");
+        this.content = requireNotBlank(content, "content");
         this.updatedAt = LocalDateTime.now();
+    }
+
+    private static <T> T requireNonNull(T value, String fieldName) {
+        if (value == null) {
+            throw new IllegalArgumentException(fieldName + " is required.");
+        }
+
+        return value;
+    }
+
+    private static String requireNotBlank(String value, String fieldName) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(fieldName + " is required.");
+        }
+
+        return value.trim();
     }
 
     public Long getCommunityId() {
