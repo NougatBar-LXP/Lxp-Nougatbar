@@ -19,10 +19,10 @@ public class Enrollment {
     @Column(name = "enrollment_id")
     private Long enrollmentId;
 
-    @Column(name = "member_id")
+    @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "course_id")
+    @Column(name = "course_id", nullable = false)
     private Long courseId;
 
     @Column(name = "status", nullable = false)

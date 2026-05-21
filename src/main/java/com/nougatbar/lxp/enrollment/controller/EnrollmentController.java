@@ -23,6 +23,8 @@ public class EnrollmentController {
     @GetMapping("/members/{memberId}")
     public ResponseEntity<List<EnrollmentDTO>> getMyEnrollments(@PathVariable Long memberId) {
 
+        memberId = Math.max(0L, memberId);
+
         List<EnrollmentDTO> response = service.findById(memberId);
         return ResponseEntity.ok(response);
     }
