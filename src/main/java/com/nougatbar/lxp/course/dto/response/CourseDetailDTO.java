@@ -3,6 +3,7 @@ package com.nougatbar.lxp.course.dto.response;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 강좌 상세 조회에 대한 응답 DTO. 하위 섹션에 대한 정보들을 포함합니다.
@@ -18,6 +19,7 @@ import java.util.List;
  * @param createdAt    강좌 생성 일시
  * @param deletedAt    강좌 삭제 일시 (삭제되지 않은 경우 null)
  * @param approvedAt   강좌 승인 일시 (승인되지 않은 경우 null)
+ * @param tags         강좌에 등록된 태그 목록
  * @param sections     강좌에 포함된 섹션 목록. {@link SectionDetailDTO}
  */
 public record CourseDetailDTO(Long courseId,
@@ -31,5 +33,6 @@ public record CourseDetailDTO(Long courseId,
                               LocalDateTime createdAt,
                               LocalDateTime deletedAt,
                               LocalDateTime approvedAt,
+                              Set<String> tags,
                               List<SectionDetailDTO> sections) {
 }
