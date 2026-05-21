@@ -14,8 +14,8 @@ import java.util.Set;
  * @param title        강좌 제목
  * @param description  강좌 설명
  * @param price        강좌 가격 (0 이상)
- * @param level        강좌 난이도 (EASY, MEDIUM, HARD)
- * @param status       강좌 상태 (DRAFT, PUBLISHED, ARCHIVED)
+ * @param level        강좌 난이도
+ * @param status       강좌 상태
  * @param thumbnailUrl 강좌 썸네일 이미지 URL
  * @param createdAt    강좌 생성 일시
  * @param deletedAt    강좌 삭제 일시 (삭제되지 않은 경우 null)
