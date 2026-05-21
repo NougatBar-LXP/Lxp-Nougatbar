@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 public record MemberDTO(Long memberId,
                         String email,
-                        String password,
                         String name,
                         String nickname,
                         MemberStatusDTO status,
