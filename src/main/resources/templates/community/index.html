@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LXP Community</title>
+    <link rel="stylesheet" th:href="@{/css/community.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" th:href="@{/community-ui}" aria-label="LXP">
+            <span class="brand-mark">L</span>
+            <span class="brand-name">LXP</span>
+        </a>
+        <nav class="global-nav" aria-label="주요 메뉴">
+            <a href="#">강의</a>
+            <a href="#">내 학습방</a>
+        </nav>
+        <div class="header-actions">
+            <a class="search-button" href="#community-search" aria-label="검색">
+                <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10.8 18.1a7.3 7.3 0 1 1 0-14.6 7.3 7.3 0 0 1 0 14.6Zm5.1-1.5 4.6 4.6"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="course-hero">
+        <div class="page-container hero-grid">
+            <div class="course-summary">
+                <div class="breadcrumb">
+                    <span>강의</span>
+                    <span>/</span>
+                    <span th:text="|코스 ${course.courseId}|">코스 1</span>
+                </div>
+                <span class="best-badge" th:if="${course.sample}">SAMPLE</span>
+                <h1 th:text="${course.title}">운영체제 공룡책 전공강의</h1>
+                <p class="course-description" th:text="${course.descriptionText()}">강의 설명</p>
+                <div class="course-meta" aria-label="강의 정보">
+                    <span th:text="${course.statusText()}">게시됨</span>
+                    <span th:text="${course.levelText()}">난이도 중급</span>
+                    <span th:text="|강의 ID ${course.courseId}|">강의 ID 1</span>
+                    <span th:text="|지식공유자 ${course.memberId}|">지식공유자 1</span>
+                </div>
+            </div>
+
+            <aside class="enroll-card" aria-label="수강 정보">
+                <div class="thumbnail">
+                    <img th:if="${course.hasThumbnail()}"
+                         th:src="${course.thumbnailUrl}"
+                         th:alt="${course.title}">
+                    <span th:text="${course.thumbnailLabel()}">OS</span>
+                </div>
+                <strong class="price" th:text="${course.priceText()}">₩33,000</strong>
+                <a class="primary-button link-button" href="#">수강신청 하기</a>
+                <a class="ghost-button link-button" href="#">바구니에 담기</a>
+                <dl class="course-facts">
+                    <div>
+                        <dt>강의 상태</dt>
+                        <dd th:text="${course.statusText()}">게시됨</dd>
+                    </div>
+                    <div>
+                        <dt>난이도</dt>
+                        <dd th:text="${course.levelText()}">난이도 중급</dd>
+                    </div>
+                    <div>
+                        <dt>코스 ID</dt>
+                        <dd th:text="${course.courseId}">1</dd>
+                    </div>
+                </dl>
+            </aside>
+        </div>
+    </section>
+
+    <nav class="course-tabs" aria-label="강의 상세 메뉴">
+        <div class="page-container tab-scroll">
+            <a href="#">강의 소개</a>
+            <a href="#">커리큘럼</a>
+            <a href="#">수강평 126</a>
+            <a class="is-active" th:href="@{/community-ui(cid=${course.courseId})}">커뮤니티</a>
+            <a href="#">새소식</a>
+        </div>
+    </nav>
+
+    <section class="page-container community-section">
+        <div class="community-header">
+            <div>
+                <p class="eyebrow">Course Community</p>
+                <h2>커뮤니티</h2>
+            </div>
+            <a class="primary-button link-button"
+               th:href="@{/community-ui/new(cid=${course.courseId}, type=${currentType}, q=${keyword})}">글쓰기</a>
+        </div>
+
+        <div class="community-content">
+            <div class="board">
+                <div class="board-toolbar">
+                    <div class="tabs" aria-label="게시글 대상">
+                        <a class="tab"
+                           th:classappend="${currentType == 'ALL'} ? ' is-active'"
+                           th:href="@{/community-ui(cid=${course.courseId}, type='ALL', q=${keyword})}">전체</a>
+                        <a class="tab"
+                           th:classappend="${currentType == 'COURSE'} ? ' is-active'"
+                           th:href="@{/community-ui(cid=${course.courseId}, type='COURSE', q=${keyword})}">코스</a>
+                        <a class="tab"
+                           th:classappend="${currentType == 'LECTURE'} ? ' is-active'"
+                           th:href="@{/community-ui(cid=${course.courseId}, type='LECTURE', q=${keyword})}">강의</a>
+                        <a class="tab"
+                           th:classappend="${currentType == 'MISSION'} ? ' is-active'"
+                           th:href="@{/community-ui(cid=${course.courseId}, type='MISSION', q=${keyword})}">미션</a>
+                    </div>
+
+                    <form class="search-field toolbar-form" th:action="@{/community-ui}" method="get">
+                        <input type="hidden" name="cid" th:value="${course.courseId}">
+                        <input type="hidden" name="type" th:value="${currentType}">
+                        <label>
+                            <span class="visually-hidden">검색</span>
+                            <input id="community-search" type="search" name="q" placeholder="궁금한 내용을 검색해 보세요!" th:value="${keyword}">
+                        </label>
+                        <button class="ghost-button" type="submit">검색</button>
+                    </form>
+                </div>
+
+                <div class="list-status" th:if="${#lists.isEmpty(communities)}">게시글이 없습니다.</div>
+                <div class="post-list" th:if="${!#lists.isEmpty(communities)}">
+                    <a class="post-card"
+                       th:each="community : ${communities}"
+                       th:classappend="${selectedCommunity != null and selectedCommunity.communityId() == community.communityId()} ? ' is-active'"
+                        th:href="@{/community-ui/{id}(id=${community.communityId()}, cid=${course.courseId}, type=${currentType}, q=${keyword})}">
+                        <div class="post-meta">
+                            <span class="type-badge"
+                                  th:attr="data-type=${community.type()}"
+                                  th:text="${community.type().name() == 'COURSE' ? '코스' : (community.type().name() == 'LECTURE' ? '강의' : '미션')}">코스</span>
+                            <span th:text="|코스 ${community.courseId()}|">코스 1</span>
+                            <span th:text="${#temporals.format(community.createdAt(), 'yyyy. MM. dd.')}">2026. 05. 21.</span>
+                        </div>
+                        <h3 class="post-title" th:text="${community.title()}">게시글 제목</h3>
+                        <p class="post-content" th:text="${community.content()}">게시글 내용</p>
+                        <div class="post-foot">
+                            <span th:text="|작성자 ${community.memberId()}|">작성자 1</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="detail-panel">
+                <section class="compose-card" th:if="${showForm}">
+                    <div class="panel-header">
+                        <h2 th:text="${editMode} ? '게시글 수정' : '새 글 작성'">새 글 작성</h2>
+                    </div>
+
+                    <form class="compose-form"
+                          th:action="${editMode} ? @{/community-ui/{id}(id=${selectedCommunity.communityId()})} : @{/community-ui}"
+                          method="post">
+                        <input type="hidden" name="cid" th:value="${course.courseId}">
+                        <div class="form-grid">
+                            <label>
+                                <span>게시글 대상</span>
+                                <select name="type" th:disabled="${editMode}" required>
+                                    <option value="COURSE"
+                                            th:selected="${editMode and selectedCommunity.type().name() == 'COURSE'}">코스</option>
+                                    <option value="LECTURE"
+                                            th:selected="${editMode and selectedCommunity.type().name() == 'LECTURE'}">강의</option>
+                                    <option value="MISSION"
+                                            th:selected="${editMode and selectedCommunity.type().name() == 'MISSION'}">미션</option>
+                                </select>
+                            </label>
+                            <label>
+                                <span>코스 ID</span>
+                                <input type="number" name="courseId" min="1"
+                                       th:value="${editMode ? selectedCommunity.courseId() : course.courseId}"
+                                       th:readonly="${editMode}" required>
+                            </label>
+                            <label>
+                                <span>멤버 ID</span>
+                                <input type="number" name="memberId" min="1"
+                                       th:value="${editMode ? selectedCommunity.memberId() : 1}"
+                                       th:readonly="${editMode}" required>
+                            </label>
+                        </div>
+                        <label>
+                            <span>제목</span>
+                            <input type="text" name="title" maxlength="120"
+                                   th:value="${editMode ? selectedCommunity.title() : ''}" required>
+                        </label>
+                        <label>
+                            <span>내용</span>
+                            <textarea name="content" rows="7" required
+                                      th:text="${editMode ? selectedCommunity.content() : ''}"></textarea>
+                        </label>
+                        <div class="form-actions">
+                            <a class="ghost-button link-button"
+                               th:href="${editMode} ? @{/community-ui/{id}(id=${selectedCommunity.communityId()}, cid=${course.courseId}, type=${currentType}, q=${keyword})} : @{/community-ui(cid=${course.courseId}, type=${currentType}, q=${keyword})}">취소</a>
+                            <button class="primary-button" type="submit">저장</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section th:if="${!showForm and selectedCommunity != null}">
+                    <div class="detail-meta">
+                        <span class="type-badge"
+                              th:attr="data-type=${selectedCommunity.type()}"
+                              th:text="${selectedCommunity.type().name() == 'COURSE' ? '코스' : (selectedCommunity.type().name() == 'LECTURE' ? '강의' : '미션')}">코스</span>
+                        <span th:text="|코스 ${selectedCommunity.courseId()}|">코스 1</span>
+                        <span th:text="|작성자 ${selectedCommunity.memberId()}|">작성자 1</span>
+                    </div>
+                    <h2 class="detail-title" th:text="${selectedCommunity.title()}">게시글 제목</h2>
+                    <div class="detail-meta">
+                        <span th:text="${#temporals.format(selectedCommunity.createdAt(), 'yyyy. MM. dd. HH:mm')}">2026. 05. 21. 10:00</span>
+                        <span th:if="${selectedCommunity.updatedAt() != null}"
+                              th:text="|수정 ${#temporals.format(selectedCommunity.updatedAt(), 'yyyy. MM. dd. HH:mm')}|">수정 2026. 05. 21. 10:00</span>
+                    </div>
+                    <p class="detail-content" th:text="${selectedCommunity.content()}">게시글 내용</p>
+                    <div class="detail-actions">
+                        <a class="ghost-button link-button"
+                           th:href="@{/community-ui/{id}/edit(id=${selectedCommunity.communityId()}, cid=${course.courseId}, type=${currentType}, q=${keyword})}">수정</a>
+                        <form th:action="@{/community-ui/{id}/delete(id=${selectedCommunity.communityId()})}" method="post">
+                            <input type="hidden" name="cid" th:value="${course.courseId}">
+                            <button class="danger-button" type="submit">삭제</button>
+                        </form>
+                    </div>
+                </section>
+
+                <div class="detail-empty" th:if="${!showForm and selectedCommunity == null}">
+                    <span class="empty-icon">+</span>
+                    <p>게시글을 선택하세요.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="page-container footer-inner">
+        <div>
+            <a class="footer-brand" th:href="@{/community-ui(cid=${course.courseId})}">LXP</a>
+            <p class="footer-description">배우고 나누며 성장하는 온라인 학습 플랫폼</p>
+        </div>
+        <nav class="footer-links" aria-label="푸터 메뉴">
+            <a href="#">이용약관</a>
+            <a href="#">개인정보처리방침</a>
+            <a href="#">고객센터</a>
+            <a href="#">지식공유자 안내</a>
+        </nav>
+        <address class="company-info">
+            LXP Nougatbar · 서울특별시 강남구 테헤란로 123<br>
+            사업자등록번호 000-00-00000 · contact@lxp.example
+        </address>
+        <p class="copyright">© LXP. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>
