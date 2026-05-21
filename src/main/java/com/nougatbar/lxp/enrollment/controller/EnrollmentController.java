@@ -2,7 +2,7 @@ package com.nougatbar.lxp.enrollment.controller;
 
 
 import com.nougatbar.lxp.enrollment.service.EnrollmentService;
-import com.nougatbar.lxp.enrollment.dto.ResponseDTO;
+import com.nougatbar.lxp.enrollment.dto.response.EnrollmentDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +21,9 @@ public class EnrollmentController {
     }
 
     @GetMapping("/members/{memberId}")
-    public ResponseEntity<List<ResponseDTO>> getMyEnrollments(@PathVariable("memberId") Long memberId) {
+    public ResponseEntity<List<EnrollmentDTO>> getMyEnrollments(@PathVariable Long memberId) {
 
-        List<ResponseDTO> response = service.findById(memberId);
+        List<EnrollmentDTO> response = service.findById(memberId);
         return ResponseEntity.ok(response);
     }
 }

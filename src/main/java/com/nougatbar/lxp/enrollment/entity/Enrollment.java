@@ -1,11 +1,14 @@
 package com.nougatbar.lxp.enrollment.entity;
 
-import com.nougatbar.lxp.course.Course;
-import com.nougatbar.lxp.member.Member;
-import jakarta.persistence.*;
-import java.util.Objects;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "enrollments")
@@ -16,13 +19,11 @@ public class Enrollment {
     @Column(name = "enrollment_id")
     private Long enrollmentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @Column(name = "member_id")
+    private Long memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    @Column(name = "course_id")
+    private Long courseId;
 
     @Column(name = "status", nullable = false)
     private Boolean status;
@@ -33,22 +34,22 @@ public class Enrollment {
     protected Enrollment() {
     }
 
-    public Enrollment(Boolean status, Course course, Member member) {
+    public Enrollment(Boolean status, Long courseId, Long memberId) {
         this.status = (status != null) ? status : false;
-        this.course = Objects.requireNonNull(course, "강좌 정보는 필수 입니다");
-        this.member = Objects.requireNonNull(member, "회원 정보는 필수 입니다");
+        this.courseId = Objects.requireNonNull(courseId, "강좌 정보는 필수 입니다");
+        this.memberId = Objects.requireNonNull(memberId, "회원 정보는 필수 입니다");
     }
 
     public Long getEnrollmentId() {
         return enrollmentId;
     }
 
-    public Member getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public Course getCourse() {
-        return course;
+    public Long getCourseId() {
+        return courseId;
     }
 
     public Boolean getStatus() {

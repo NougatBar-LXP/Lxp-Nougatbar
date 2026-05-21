@@ -1,6 +1,6 @@
 package com.nougatbar.lxp.enrollment.service;
 
-import com.nougatbar.lxp.enrollment.dto.ResponseDTO;
+import com.nougatbar.lxp.enrollment.dto.response.EnrollmentDTO;
 import com.nougatbar.lxp.enrollment.entity.Enrollment;
 import com.nougatbar.lxp.enrollment.repository.EnrollmentRepository;
 import org.springframework.stereotype.Service;
@@ -19,16 +19,15 @@ public class EnrollmentService {
         this.repository = repository;
     }
 
-    public List<ResponseDTO> findById(Long memberId) {
+    public List<EnrollmentDTO> findById(Long memberId) {
 
-        List<Enrollment> enrollments = repository.findByMember_MemberIdOrderByCreatedAtDesc(memberId);
+        List<Enrollment> enrollments =
+                repository.findByMember_MemberIdOrderByCreatedAtDesc(memberId);
 
         if (enrollments.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return enrollments.stream()
-                .map(ResponseDTO::from)
-                .toList();
+        return enrollments.stream().map(EnrollmentDTO::from).toList();
     }
 }
