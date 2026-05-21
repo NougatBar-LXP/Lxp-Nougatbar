@@ -22,7 +22,7 @@ public class EnrollmentService {
     public List<EnrollmentDTO> findById(Long memberId) {
 
         List<Enrollment> enrollments =
-                repository.findByMember_MemberIdOrderByCreatedAtDesc(memberId);
+                repository.findByMemberIdOrderByCreatedAtDesc(memberId);
 
         if (enrollments.isEmpty()) {
             return Collections.emptyList();
