@@ -25,7 +25,7 @@ public class Enrollment {
     @Column(name = "course_id")
     private Long courseId;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "status", nullable = false)
     private Boolean isActive;
 
     @Column(name = "created_at", nullable = false, updatable = false)
