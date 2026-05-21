@@ -1,8 +1,9 @@
-package com.nougatbar.lxp.enrollment;
+package com.nougatbar.lxp.enrollment.entity;
 
 import com.nougatbar.lxp.course.Course;
 import com.nougatbar.lxp.member.Member;
 import jakarta.persistence.*;
+import java.util.Objects;
 
 import java.time.LocalDateTime;
 
@@ -33,9 +34,9 @@ public class Enrollment {
     }
 
     public Enrollment(Boolean status, Course course, Member member) {
-        this.status = status;
-        this.course = course;
-        this.member = member;
+        this.status = (status != null) ? status : false;
+        this.course = Objects.requireNonNull(course, "강좌 정보는 필수 입니다");
+        this.member = Objects.requireNonNull(member, "회원 정보는 필수 입니다");
     }
 
     public Long getEnrollmentId() {

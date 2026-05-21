@@ -1,6 +1,7 @@
-package com.nougatbar.lxp.enrollment;
+package com.nougatbar.lxp.enrollment.controller;
 
 
+import com.nougatbar.lxp.enrollment.service.EnrollmentService;
 import com.nougatbar.lxp.enrollment.dto.ResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

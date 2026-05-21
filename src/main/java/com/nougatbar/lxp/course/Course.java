@@ -1,6 +1,6 @@
 package com.nougatbar.lxp.course;
 
-import com.nougatbar.lxp.enrollment.Level;
+import com.nougatbar.lxp.enrollment.entity.Level;
 import jakarta.persistence.*;
 
 @Entity

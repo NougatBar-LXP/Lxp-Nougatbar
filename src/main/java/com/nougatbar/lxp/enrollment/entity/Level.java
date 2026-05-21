@@ -1,4 +1,4 @@
-package com.nougatbar.lxp.enrollment;
+package com.nougatbar.lxp.enrollment.entity;
 
 public enum Level {
     EASY,
