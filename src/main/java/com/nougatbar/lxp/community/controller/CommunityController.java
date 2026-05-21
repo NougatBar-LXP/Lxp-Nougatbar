@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/community")
+@RequestMapping("/community")
 public class CommunityController {
 
     private final CommunityService communityService;
@@ -35,7 +35,7 @@ public class CommunityController {
     @PostMapping
     public ResponseEntity<CommunityResponse> createCommunity(@RequestBody CommunityCreateRequest request) {
         CommunityResponse response = communityService.createCommunity(request);
-        return ResponseEntity.created(URI.create("/api/community/" + response.communityId()))
+        return ResponseEntity.created(URI.create("/community/" + response.communityId()))
                 .body(response);
     }
 
