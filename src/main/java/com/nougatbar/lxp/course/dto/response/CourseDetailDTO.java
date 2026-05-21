@@ -1,5 +1,7 @@
 package com.nougatbar.lxp.course.dto.response;
 
+import com.nougatbar.lxp.course.dto.CourseLevelDTO;
+import com.nougatbar.lxp.course.dto.CourseStatusDTO;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,8 +29,8 @@ public record CourseDetailDTO(Long courseId,
                               String title,
                               String description,
                               int price,
-                              String level,
-                              String status,
+                              CourseLevelDTO level,
+                              CourseStatusDTO status,
                               URL thumbnailUrl,
                               LocalDateTime createdAt,
                               LocalDateTime deletedAt,
