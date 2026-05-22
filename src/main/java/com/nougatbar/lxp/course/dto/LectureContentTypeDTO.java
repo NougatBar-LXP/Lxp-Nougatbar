@@ -1,6 +1,7 @@
 package com.nougatbar.lxp.course.dto;
 
 import com.nougatbar.lxp.course.entity.LectureContentType;
+import java.util.Objects;
 
 /**
  * 강의 유형 정보를 담는 열거형 DTO
@@ -17,7 +18,7 @@ public enum LectureContentTypeDTO {
     VIDEO;
 
     public static LectureContentTypeDTO from(LectureContentType lectureContentType) {
-        return switch (lectureContentType) {
+        return switch (Objects.requireNonNull(lectureContentType)) {
             case PDF -> PDF;
             case VIDEO -> VIDEO;
         };

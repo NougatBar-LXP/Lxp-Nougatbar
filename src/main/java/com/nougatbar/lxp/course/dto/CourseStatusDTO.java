@@ -1,6 +1,7 @@
 package com.nougatbar.lxp.course.dto;
 
 import com.nougatbar.lxp.course.entity.CourseStatus;
+import java.util.Objects;
 
 /**
  * 강좌 상태 정보를 담는 열거형 DTO
@@ -22,7 +23,7 @@ public enum CourseStatusDTO {
     ARCHIVED;
 
     public static CourseStatusDTO from(CourseStatus courseStatus) {
-        return switch (courseStatus) {
+        return switch (Objects.requireNonNull(courseStatus)) {
             case DRAFT -> DRAFT;
             case PUBLISHED -> PUBLISHED;
             case ARCHIVED -> ARCHIVED;

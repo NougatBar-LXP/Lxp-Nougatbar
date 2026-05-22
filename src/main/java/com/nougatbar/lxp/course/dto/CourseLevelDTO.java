@@ -1,6 +1,7 @@
 package com.nougatbar.lxp.course.dto;
 
 import com.nougatbar.lxp.course.entity.CourseLevel;
+import java.util.Objects;
 
 /**
  * 강좌 난이도 정보를 담는 열거형 DTO
@@ -22,7 +23,7 @@ public enum CourseLevelDTO {
     HARD;
 
     public static CourseLevelDTO from(CourseLevel courseLevel) {
-        return switch (courseLevel) {
+        return switch (Objects.requireNonNull(courseLevel)) {
             case EASY -> EASY;
             case NORMAL -> NORMAL;
             case HARD -> HARD;
