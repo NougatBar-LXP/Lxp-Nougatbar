@@ -2,10 +2,13 @@ package com.nougatbar.lxp.course.dto.response;
 
 import com.nougatbar.lxp.course.dto.CourseLevelDTO;
 import com.nougatbar.lxp.course.dto.CourseStatusDTO;
+import com.nougatbar.lxp.course.entity.Course;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 강좌 상세 조회에 대한 응답 DTO. 하위 섹션에 대한 정보들을 포함합니다.
@@ -37,4 +40,26 @@ public record CourseDetailDTO(Long courseId,
                               LocalDateTime approvedAt,
                               Set<String> tags,
                               List<SectionDetailDTO> sections) {
+    public static CourseDetailDTO from(Course course) {
+        try {
+            return new CourseDetailDTO(course.getCourseId(),
+                    course.getMemberId(),
+                    course.getTitle(),
+                    course.getDescription(),
+                    course.getPrice(),
+                    CourseLevelDTO.from(course.getLevel()),
+                    CourseStatusDTO.from(course.getStatus()),
+                    new URL(course.getThumbnailUrl()),
+                    course.getCreatedAt(),
+                    course.getDeletedAt(),
+                    course.getApprovedAt(),
+                    course.getTagRefs()
+                            .stream()
+                            .map(ref -> ref.getTag().getTagName())
+                            .collect(Collectors.toSet()),
+                    course.getSections().stream().map(SectionDetailDTO::from).toList());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

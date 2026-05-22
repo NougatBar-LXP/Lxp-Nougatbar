@@ -1,5 +1,6 @@
 package com.nougatbar.lxp.course.dto.response;
 
+import com.nougatbar.lxp.course.entity.Mission;
 import java.time.LocalDateTime;
 
 /**
@@ -20,4 +21,13 @@ public record MissionDetailDTO(Long missionId,
                                int sequence,
                                LocalDateTime createdAt,
                                LocalDateTime updatedAt) {
+    public static MissionDetailDTO from(Mission mission) {
+        return new MissionDetailDTO(mission.getMissionId(),
+                mission.getSection().getSectionId(),
+                mission.getTitle(),
+                mission.getContents(),
+                mission.getSequence(),
+                mission.getCreatedAt(),
+                mission.getUpdatedAt());
+    }
 }

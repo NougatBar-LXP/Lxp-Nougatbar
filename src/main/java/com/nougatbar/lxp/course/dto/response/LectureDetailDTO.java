@@ -1,6 +1,8 @@
 package com.nougatbar.lxp.course.dto.response;
 
 import com.nougatbar.lxp.course.dto.LectureContentTypeDTO;
+import com.nougatbar.lxp.course.entity.Lecture;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 
@@ -24,4 +26,18 @@ public record LectureDetailDTO(Long lectureId,
                                URL contentUrl,
                                LocalDateTime createdAt,
                                LocalDateTime updatedAt) {
+    public static LectureDetailDTO from(Lecture lecture) {
+        try {
+            return new LectureDetailDTO(lecture.getLectureId(),
+                    lecture.getSection().getSectionId(),
+                    LectureContentTypeDTO.from(lecture.getType()),
+                    lecture.getTitle(),
+                    lecture.getSequence(),
+                    new URL(lecture.getContentUrl()),
+                    lecture.getCreatedAt(),
+                    lecture.getUpdatedAt());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
