@@ -1,7 +1,7 @@
 -- ============================================
 -- 더미 데이터 INSERT (자동 로드용)
 -- 생성 기준: 2026-05-22
--- 구조: 강좌 20개 → 섹션 68개 → 강의 90개 → 미션 20개 → 태그 + 매핑
+-- 구조: 강좌 20개 → 섹션 66개 → 강의 131개 → 미션 20개 → 태그 + 매핑
 -- ============================================
 
 -- 1. COURSES 테이블 삽입 (20개 강좌)
@@ -29,7 +29,7 @@ INSERT INTO courses (member_id, title, description, price, level, status, thumbn
 (9999, 'Redis 캐싱 전략', '데이터 구조, 캐싱 패턴, 클러스터링, 성능 튜닝을 학습합니다.', 74900, 'HARD', 'PUBLISHED', 'https://example.com/thumb/redis.jpg', '2026-04-20 10:00:00', NULL, '2026-04-25 10:00:00'),
 (9999, 'GraphQL API 개발', 'Schema 설계, Query/Mutation, DataLoader, 성능 최적화를 다룹니다.', 69900, 'HARD', 'PUBLISHED', 'https://example.com/thumb/graphql.jpg', '2026-04-25 10:00:00', NULL, '2026-05-01 10:00:00');
 
--- 2. SECTIONS 테이블 삽입 (68개 섹션)
+-- 2. SECTIONS 테이블 삽입 (66개 섹션)
 -- EASY 강좌 1~8: 각각 2개, 3개, 2개, 3개, 2개, 3개, 2개, 3개
 -- NORMAL 강좌 9~15: 각각 3개, 4개, 3개, 4개, 3개, 4개, 3개
 -- HARD 강좌 16~20: 각각 4개, 5개, 4개, 5개, 4개
@@ -122,7 +122,7 @@ INSERT INTO sections (course_id, title, sequence, created_at, updated_at) VALUES
 (20, 'DataLoader와 배치 처리', 3, '2026-04-25 10:32:00', NULL),
 (20, '성능 최적화 및 캐싱', 4, '2026-04-25 10:33:00', NULL);
 
--- 3. LECTURES 테이블 삽입 (90개 강의)
+-- 3. LECTURES 테이블 삽입 (131개 강의)
 -- 각 섹션마다 1~2개의 강의 배치
 
 INSERT INTO lectures (section_id, type, title, sequence, content_url, created_at, updated_at) VALUES

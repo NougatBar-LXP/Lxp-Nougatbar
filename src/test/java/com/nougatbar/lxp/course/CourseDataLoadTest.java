@@ -19,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 @DataJpaTest
 @ActiveProfiles("default")
 public class CourseDataLoadTest {
-
     @Autowired
     private CourseRepository courseRepository;
 
@@ -43,9 +42,9 @@ public class CourseDataLoadTest {
         // Assert
         assertThat(courseCount).as("Courses 테이블에 20개의 강좌가 로드되어야 함").isEqualTo(20);
 
-        assertThat(sectionCount).as("Sections 테이블에 68개의 섹션이 로드되어야 함").isEqualTo(68);
+        assertThat(sectionCount).as("Sections 테이블에 66개의 섹션이 로드되어야 함").isEqualTo(66);
 
-        assertThat(lectureCount).as("Lectures 테이블에 90개의 강의가 로드되어야 함").isEqualTo(90);
+        assertThat(lectureCount).as("Lectures 테이블에 131개의 강의가 로드되어야 함").isEqualTo(131);
 
         assertThat(missionCount).as("Missions 테이블에 20개의 미션이 로드되어야 함").isEqualTo(20);
     }
