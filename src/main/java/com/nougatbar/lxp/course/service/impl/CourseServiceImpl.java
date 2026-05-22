@@ -7,8 +7,10 @@ import com.nougatbar.lxp.course.service.CourseService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
 
