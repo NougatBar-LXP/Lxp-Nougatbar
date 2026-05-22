@@ -163,7 +163,7 @@ INSERT INTO lectures (section_id, type, title, sequence, content_url, created_at
 (15, 'PDF', 'firewall, ssh 보안 설정', 2, 'https://example.com/pdf/linux-003.pdf', '2026-02-10 11:05:00', NULL),
 -- Course 7 Sections
 (16, 'VIDEO', 'HTTP 메서드와 상태 코드 이해', 1, 'https://example.com/video/restapi-001.mp4', '2026-02-15 11:00:00', NULL),
-(16, 'pdf', 'Request/Response 헤더 분석', 2, 'https://example.com/pdf/restapi-001.pdf', '2026-02-15 11:01:00', NULL),
+(16, 'PDF', 'Request/Response 헤더 분석', 2, 'https://example.com/pdf/restapi-001.pdf', '2026-02-15 11:01:00', NULL),
 (17, 'VIDEO', 'REST 아키텍처 설계 원칙', 1, 'https://example.com/video/restapi-002.mp4', '2026-02-15 11:02:00', NULL),
 (17, 'PDF', '버전 관리 및 에러 핸들링', 2, 'https://example.com/pdf/restapi-002.pdf', '2026-02-15 11:03:00', NULL),
 -- Course 8 Sections
