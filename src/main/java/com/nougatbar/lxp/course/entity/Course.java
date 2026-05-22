@@ -90,7 +90,7 @@ public class Course {
 
         Objects.requireNonNull(description);
         if (description.isBlank()) {
-            throw new IllegalArgumentException("title must not be blank");
+            throw new IllegalArgumentException("description must not be blank");
         }
 
         Objects.requireNonNull(price);
