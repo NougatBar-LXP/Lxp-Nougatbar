@@ -375,7 +375,7 @@
 <body>
 <header class="site-header">
     <div class="header-inner">
-        <a class="brand" th:href="@{/cart-ui(memberId=${memberId})}">
+        <a class="brand" th:href="@{/cart-ui}">
             <span class="brand-mark">L</span>
             <span>LXP Cart</span>
         </a>
@@ -410,7 +410,6 @@
                     <div class="course-actions">
                         <form th:if="${!cartCourseIds.contains(course.courseId())}" th:action="@{/cart-ui}" method="post">
                             <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                            <input type="hidden" name="memberId" th:value="${memberId}">
                             <input type="hidden" name="courseId" th:value="${course.courseId()}">
                             <button class="primary-button" type="submit">장바구니 담기</button>
                         </form>
@@ -432,7 +431,6 @@
                 <button class="primary-button" type="button">주문하기</button>
                 <form th:action="@{/cart-ui/delete-all}" method="post">
                     <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <input type="hidden" name="memberId" th:value="${memberId}">
                     <button class="danger-button" type="submit">전체 삭제하기</button>
                 </form>
             </div>
@@ -455,7 +453,6 @@
                     <div class="item-actions">
                         <form th:action="@{/cart-ui/delete}" method="post">
                             <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                            <input type="hidden" name="memberId" th:value="${memberId}">
                             <input type="hidden" name="courseId" th:value="${cart.courseId}">
                             <button class="secondary-button" type="submit">삭제</button>
                         </form>

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class CartPageController {
 
+    private static final Long TEMP_MEMBER_ID = 1L;
+
     private final CartService cartService;
     private final CourseService courseService;
 
@@ -25,15 +27,13 @@ public class CartPageController {
     }
 
     @GetMapping("/cart-ui")
-    public String showCartPage(@RequestParam(defaultValue = "1") Long memberId, Model model) {
+    public String showCartPage(Model model) {
+        Long memberId = TEMP_MEMBER_ID;
         List<CartResponse> carts = cartService.findCartsById(memberId);
         List<CourseSummaryDTO> courses = courseService.listAllCourses();
-        Set<Long> cartCourseIds = carts.stream()
-                .map(CartResponse::courseId)
-                .collect(Collectors.toSet());
-        int totalPrice = carts.stream()
-                .mapToInt(CartResponse::price)
-                .sum();
+        Set<Long> cartCourseIds =
+                carts.stream().map(CartResponse::courseId).collect(Collectors.toSet());
+        int totalPrice = carts.stream().mapToInt(CartResponse::price).sum();
 
         model.addAttribute("memberId", memberId);
         model.addAttribute("courses", courses);
@@ -48,20 +48,20 @@ public class CartPageController {
     }
 
     @PostMapping("/cart-ui")
-    public String addCart(@RequestParam Long memberId, @RequestParam Long courseId) {
-        cartService.addCart(memberId, courseId);
-        return "redirect:/cart-ui?memberId=" + memberId;
+    public String addCart(@RequestParam Long courseId) {
+        cartService.addCart(TEMP_MEMBER_ID, courseId);
+        return "redirect:/cart-ui";
     }
 
     @PostMapping("/cart-ui/delete")
-    public String deleteCart(@RequestParam Long memberId, @RequestParam Long courseId) {
-        cartService.deleteCart(memberId, courseId);
-        return "redirect:/cart-ui?memberId=" + memberId;
+    public String deleteCart(@RequestParam Long courseId) {
+        cartService.deleteCart(TEMP_MEMBER_ID, courseId);
+        return "redirect:/cart-ui";
     }
 
     @PostMapping("/cart-ui/delete-all")
-    public String deleteAllCart(@RequestParam Long memberId) {
-        cartService.deleteAllCart(memberId);
-        return "redirect:/cart-ui?memberId=" + memberId;
+    public String deleteAllCart() {
+        cartService.deleteAllCart(TEMP_MEMBER_ID);
+        return "redirect:/cart-ui";
     }
 }

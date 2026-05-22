@@ -60,13 +60,17 @@ public class CartService {
 
     @Transactional
     public void deleteCart(Long memberId, Long courseId) {
-
+        if (memberId == null || courseId == null) {
+            throw new IllegalArgumentException("요청된 memberId와 courseId가 존재하지 않습니다.");
+        }
         cartRepository.deleteByMemberIdAndCourseId(memberId, courseId);
-
     }
 
     @Transactional
     public void deleteAllCart(Long memberId) {
+        if (memberId == null) {
+            throw new IllegalArgumentException("요청된 memberId가 존재하지 않습니다.");
+        }
         cartRepository.deleteByMemberId(memberId);
     }
 
