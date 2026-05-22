@@ -1,5 +1,6 @@
 package com.nougatbar.lxp.course.dto.response;
 
+import com.nougatbar.lxp.course.entity.Section;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,4 +24,14 @@ public record SectionDetailDTO(Long sectionId,
                                LocalDateTime updatedAt,
                                List<LectureDetailDTO> lectures,
                                List<MissionDetailDTO> missions) {
+    public static SectionDetailDTO from(Section section) {
+        return new SectionDetailDTO(section.getSectionId(),
+                section.getCourse().getCourseId(),
+                section.getTitle(),
+                section.getSequence(),
+                section.getCreatedAt(),
+                section.getUpdatedAt(),
+                section.getLectures().stream().map(LectureDetailDTO::from).toList(),
+                section.getMissions().stream().map(MissionDetailDTO::from).toList());
+    }
 }
