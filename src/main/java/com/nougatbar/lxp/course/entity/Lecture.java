@@ -44,8 +44,8 @@ public class Lecture {
     @Column(name = "sequence", nullable = false)
     private Integer sequence = 0;
 
-    @Column(name = "content_url", nullable = false)
-    private String contentUrl;
+    @Column(name = "content_uri", nullable = false)
+    private String contentUri;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -60,7 +60,7 @@ public class Lecture {
                    LectureContentType type,
                    String title,
                    Integer sequence,
-                   String contentUrl) {
+                   String contentUri) {
         Objects.requireNonNull(section);
 
         Objects.requireNonNull(type);
@@ -75,16 +75,16 @@ public class Lecture {
             throw new IllegalArgumentException("sequence must be non-negative");
         }
 
-        Objects.requireNonNull(contentUrl);
-        if (contentUrl.isBlank()) {
-            throw new IllegalArgumentException("contentUrl must not be blank");
+        Objects.requireNonNull(contentUri);
+        if (contentUri.isBlank()) {
+            throw new IllegalArgumentException("contentUri must not be blank");
         }
 
         this.section = section;
         this.type = type;
         this.title = title;
         this.sequence = sequence;
-        this.contentUrl = contentUrl;
+        this.contentUri = contentUri;
     }
 
     public Long getLectureId() {
@@ -107,8 +107,8 @@ public class Lecture {
         return sequence;
     }
 
-    public String getContentUrl() {
-        return contentUrl;
+    public String getContentUri() {
+        return contentUri;
     }
 
     public LocalDateTime getCreatedAt() {

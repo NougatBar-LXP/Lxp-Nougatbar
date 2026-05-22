@@ -3,8 +3,7 @@ package com.nougatbar.lxp.course.dto.response;
 import com.nougatbar.lxp.course.dto.CourseLevelDTO;
 import com.nougatbar.lxp.course.dto.CourseStatusDTO;
 import com.nougatbar.lxp.course.entity.Course;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
  * @param price        강좌 가격 (0 이상)
  * @param level        강좌 난이도
  * @param status       강좌 상태
- * @param thumbnailUrl 강좌 썸네일 이미지 URL
+ * @param thumbnailUri 강좌 썸네일 이미지 URI (상대 경로)
  * @param createdAt    강좌 생성 일시
  * @param deletedAt    강좌 삭제 일시 (삭제되지 않은 경우 null)
  * @param approvedAt   강좌 승인 일시 (승인되지 않은 경우 null)
@@ -34,32 +33,29 @@ public record CourseDetailDTO(Long courseId,
                               int price,
                               CourseLevelDTO level,
                               CourseStatusDTO status,
-                              URL thumbnailUrl,
+                              URI thumbnailUri,
                               LocalDateTime createdAt,
                               LocalDateTime deletedAt,
                               LocalDateTime approvedAt,
                               Set<String> tags,
                               List<SectionDetailDTO> sections) {
     public static CourseDetailDTO from(Course course) {
-        try {
-            return new CourseDetailDTO(course.getCourseId(),
-                    course.getMemberId(),
-                    course.getTitle(),
-                    course.getDescription(),
-                    course.getPrice(),
-                    CourseLevelDTO.from(course.getLevel()),
-                    CourseStatusDTO.from(course.getStatus()),
-                    new URL(course.getThumbnailUrl()),
-                    course.getCreatedAt(),
-                    course.getDeletedAt(),
-                    course.getApprovedAt(),
-                    course.getTagRefs()
-                            .stream()
-                            .map(ref -> ref.getTag().getTagName())
-                            .collect(Collectors.toSet()),
-                    course.getSections().stream().map(SectionDetailDTO::from).toList());
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+        return new CourseDetailDTO(course.getCourseId(),
+                course.getMemberId(),
+                course.getTitle(),
+                course.getDescription(),
+                course.getPrice(),
+                CourseLevelDTO.from(course.getLevel()),
+                CourseStatusDTO.from(course.getStatus()),
+                URI.create(course.getThumbnailUri()),
+                course.getCreatedAt(),
+                course.getDeletedAt(),
+                course.getApprovedAt(),
+                course.getTagRefs()
+                        .stream()
+                        .map(ref -> ref.getTag().getTagName())
+                        .collect(Collectors.toSet()),
+                course.getSections().stream().map(SectionDetailDTO::from).toList());
+
     }
 }

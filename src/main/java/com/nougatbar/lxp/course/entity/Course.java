@@ -49,8 +49,8 @@ public class Course {
     @Column(name = "status", nullable = false)
     private CourseStatus status = CourseStatus.DRAFT;
 
-    @Column(name = "thumbnail_url", nullable = false)
-    private String thumbnailUrl;
+    @Column(name = "thumbnail_uri", nullable = false)
+    private String thumbnailUri;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -75,7 +75,7 @@ public class Course {
                   String description,
                   Integer price,
                   CourseLevel level,
-                  String thumbnailUrl) {
+                  String thumbnailUri) {
         Objects.requireNonNull(memberId);
         if (memberId <= 0) {
             throw new IllegalArgumentException("memberId must be a positive number");
@@ -100,11 +100,11 @@ public class Course {
 
         Objects.requireNonNull(level);
 
-        Objects.requireNonNull(thumbnailUrl);
-        if (thumbnailUrl.isBlank()) {
-            throw new IllegalArgumentException("thumbnailUrl must not be blank");
-        } else if (thumbnailUrl.length() > 255) {
-            throw new IllegalArgumentException("thumbnailUrl must not exceed 255 characters");
+        Objects.requireNonNull(thumbnailUri);
+        if (thumbnailUri.isBlank()) {
+            throw new IllegalArgumentException("thumbnailUri must not be blank");
+        } else if (thumbnailUri.length() > 255) {
+            throw new IllegalArgumentException("thumbnailUri must not exceed 255 characters");
         }
 
         this.memberId = memberId;
@@ -112,7 +112,7 @@ public class Course {
         this.description = description;
         this.price = price;
         this.level = level;
-        this.thumbnailUrl = thumbnailUrl;
+        this.thumbnailUri = thumbnailUri;
     }
 
     public Long getCourseId() {
@@ -143,8 +143,8 @@ public class Course {
         return status;
     }
 
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
+    public String getThumbnailUri() {
+        return thumbnailUri;
     }
 
     public LocalDateTime getCreatedAt() {
