@@ -1,6 +1,7 @@
 package com.nougatbar.lxp.enrollment.controller;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,16 +26,20 @@ public class EnrollmentControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("양수가 memberId에 들어왔을때 200 OK 반환")
+    @DisplayName("음수 memberId가 들어오면 0L로 보정(Math.max)하여 200 OK를 반환한다")
     void EnrollmentSuccess() throws Exception {
 
         // given
-        Long memberId = 1L;
-        given(enrollmentService.findById(memberId)).willReturn(Collections.emptyList());
+        Long incomingMemberId = -1L;
+        Long expectedNormalizedId = 0L;
+
+        given(enrollmentService.findById(expectedNormalizedId)).willReturn(Collections.emptyList());
         // when
-        var result = mockMvc.perform(get("/enrollments/members/{memberId}", memberId));
+        var result = mockMvc.perform(get("/enrollments/members/{memberId}", incomingMemberId));
         // then
         result.andExpect(status().isOk());
+
+        verify(enrollmentService).findById(expectedNormalizedId);
     }
 
     @Test
@@ -49,4 +54,4 @@ public class EnrollmentControllerTest {
         // then
         result.andExpect(status().isOk());
     }
-}
+    }
