@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.Objects;
 
 /**
  * 강좌(Course) - 태그(Rag) 참조 엔티티 클래스
@@ -38,8 +39,8 @@ public class CourseTagRef {
     }
 
     public CourseTagRef(Course course, Tag tag) {
-        this.course = course;
-        this.tag = tag;
+        this.course = Objects.requireNonNull(course);
+        this.tag = Objects.requireNonNull(tag);
     }
 
     public Long getRefId() {

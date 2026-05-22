@@ -30,8 +30,8 @@ public class Lecture {
     @Column(name = "lecture_id")
     private Long lectureId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "section_id", nullable = false)
     private Section section;
 
     @Enumerated(EnumType.STRING)

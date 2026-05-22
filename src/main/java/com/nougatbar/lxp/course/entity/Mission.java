@@ -28,8 +28,8 @@ public class Mission {
     @Column(name = "mission_id")
     private Long missionId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "section_id", nullable = false)
     private Section section;
 
     @Column(name = "title", nullable = false)
@@ -63,6 +63,11 @@ public class Mission {
         Objects.requireNonNull(contents);
         if (contents.isBlank()) {
             throw new IllegalArgumentException("contents must not be blank");
+        }
+
+        Objects.requireNonNull(sequence);
+        if (sequence < 0) {
+            throw new IllegalArgumentException("sequence must be non-negative");
         }
 
         this.section = section;

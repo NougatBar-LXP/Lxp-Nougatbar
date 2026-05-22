@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.Objects;
 
 /**
  * 태그(Rag) 엔티티 클래스
@@ -28,6 +29,13 @@ public class Tag {
     }
 
     public Tag(String tagName) {
+        Objects.requireNonNull(tagName);
+        if (tagName.isBlank()) {
+            throw new IllegalArgumentException("tagName must not be blank");
+        } else if (tagName.length() > 255) {
+            throw new IllegalArgumentException("tagName must not exceed 255 characters");
+        }
+
         this.tagName = tagName;
     }
 

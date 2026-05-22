@@ -31,8 +31,8 @@ public class Section {
     @Column(name = "section_id")
     private Long sectionId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
     @Column(name = "title", nullable = false)
