@@ -35,7 +35,7 @@ public class Course {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "price", nullable = false)
@@ -49,7 +49,7 @@ public class Course {
     @Column(name = "status", nullable = false)
     private CourseStatus status = CourseStatus.DRAFT;
 
-    @Column(name = "thumbnail_url")
+    @Column(name = "thumbnail_url", nullable = false)
     private String thumbnailUrl;
 
     @Column(name = "created_at", nullable = false, updatable = false)
