@@ -29,7 +29,7 @@ public class CartService {
     @Transactional(readOnly = true)
     public List<CartResponse> findCartsById(Long memberId) {
         if (memberId == null) {
-            throw new IllegalArgumentException("요청된 memberId가 존재하지 않습니다.");
+            throw new IllegalArgumentException("memberId가 필요합니다.");
         }
 
         MemberDTO member = getMemberById(memberId);
@@ -43,11 +43,11 @@ public class CartService {
     @Transactional
     public CartResponse addCart(Long memberId, Long courseId) {
         if (memberId == null || courseId == null) {
-            throw new IllegalArgumentException("요청된 memberId와 courseId가 존재하지 않습니다.");
+            throw new IllegalArgumentException("memberId와 courseId가 필요합니다.");
         }
 
         if (cartRepository.existsByMemberIdAndCourseId(memberId, courseId)) {
-            return null;
+            throw new IllegalArgumentException("이미 장바구니에 담긴 강의입니다. courseId=" + courseId);
         }
 
         Cart cart = new Cart(courseId, memberId);
@@ -61,29 +61,31 @@ public class CartService {
     @Transactional
     public void deleteCart(Long memberId, Long courseId) {
         if (memberId == null || courseId == null) {
-            throw new IllegalArgumentException("요청된 memberId와 courseId가 존재하지 않습니다.");
+            throw new IllegalArgumentException("memberId와 courseId가 필요합니다.");
         }
+
         cartRepository.deleteByMemberIdAndCourseId(memberId, courseId);
     }
 
     @Transactional
     public void deleteAllCart(Long memberId) {
         if (memberId == null) {
-            throw new IllegalArgumentException("요청된 memberId가 존재하지 않습니다.");
+            throw new IllegalArgumentException("memberId가 필요합니다.");
         }
+
         cartRepository.deleteByMemberId(memberId);
     }
 
     private MemberDTO getMemberById(Long memberId) {
         return memberService.getMemberById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException(
-                        "db에 멤버를 찾을 수 없습니다. memberId=" + memberId));
+                        "멤버를 찾을 수 없습니다. memberId=" + memberId));
     }
 
     private CourseSummaryDTO getCourseSummaryById(Long courseId) {
         return courseService.getCourseSummaryById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException(
-                        "db에 강좌가 존재하지 않습니다. courseId=" + courseId));
+                        "강좌를 찾을 수 없습니다. courseId=" + courseId));
     }
 
     private CartResponse toCartResponse(MemberDTO member, Cart cart) {
@@ -96,5 +98,4 @@ public class CartService {
                 course.description(),
                 course.thumbnailUrl());
     }
-
 }
