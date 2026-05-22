@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Course 정보 조회 테스를 위한 REST API 컨트롤러. 강좌 목록 조회와 강좌 상세 조회 기능을 제공합니다.
  */
 @RestController
-@RequestMapping("/course")
+@RequestMapping("/courses")
 public class CourseController {
     private final CourseService courseService;
 
