@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "carts", uniqueConstraints = {
@@ -27,8 +28,8 @@ public class Cart {
     }
 
     public Cart(Long courseId, Long memberId) {
-        this.courseId = courseId;
-        this.memberId = memberId;
+        this.courseId = Objects.requireNonNull(courseId, "courseId는 필수입니다.");
+        this.memberId = Objects.requireNonNull(memberId, "memberId는 필수입니다.");
     }
 
     public Long getCartId() {
@@ -43,9 +44,4 @@ public class Cart {
         return memberId;
     }
 
-    @Override
-    public String toString() {
-        return "Cart{" + "cartId=" + cartId + ", courseId=" + courseId + ", memberId=" + memberId
-                + '}';
-    }
 }
