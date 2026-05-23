@@ -396,8 +396,8 @@
         <div class="course-grid">
             <article class="course-card" th:each="course : ${courses}">
                 <div class="thumbnail">
-                    <img th:if="${course.thumbnailUrl() != null}" th:src="${course.thumbnailUrl()}" th:alt="${course.title()}">
-                    <span th:if="${course.thumbnailUrl() == null}" th:text="${#strings.substring(course.title(), 0, 1)}">C</span>
+                    <img th:if="${course.thumbnailUri() != null}" th:src="${course.thumbnailUri()}" th:alt="${course.title()}">
+                    <span th:if="${course.thumbnailUri() == null}" th:text="${#strings.substring(course.title(), 0, 1)}">C</span>
                 </div>
                 <div class="course-body">
                     <h2 th:text="${course.title()}">강의 제목</h2>
@@ -439,8 +439,8 @@
         <div class="cart-list" th:if="${!#lists.isEmpty(carts)}">
             <article class="cart-item" th:each="cart : ${carts}">
                 <div class="thumbnail">
-                    <img th:if="${cart.thumbnailUrl != null}" th:src="${cart.thumbnailUrl}" th:alt="${cart.title}">
-                    <span th:if="${cart.thumbnailUrl == null}" th:text="${#strings.substring(cart.title, 0, 1)}">C</span>
+                    <img th:if="${cart.thumbnailUri != null}" th:src="${cart.thumbnailUri}" th:alt="${cart.title}">
+                    <span th:if="${cart.thumbnailUri == null}" th:text="${#strings.substring(cart.title, 0, 1)}">C</span>
                 </div>
                 <div class="item-body">
                     <h2 th:text="${cart.title}">강의 제목</h2>

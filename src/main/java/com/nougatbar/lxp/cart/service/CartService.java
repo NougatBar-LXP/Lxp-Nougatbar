@@ -96,6 +96,6 @@ public class CartService {
                 course.title(),
                 course.price(),
                 course.description(),
-                course.thumbnailUrl());
+                course.thumbnailUri());
     }
 }
