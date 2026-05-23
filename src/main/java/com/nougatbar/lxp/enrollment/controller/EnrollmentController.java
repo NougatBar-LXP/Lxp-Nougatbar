@@ -23,8 +23,9 @@ public class EnrollmentController {
     @GetMapping("/members/{memberId}")
     public ResponseEntity<List<EnrollmentDTO>> getMyEnrollments(@PathVariable Long memberId) {
 
-        // 학습 목적으로 Math 활용: if문 대신 하한값(0L) 보정 로직을 선언적인 코드로 변환
-        memberId = Math.max(0L, memberId);
+        if (memberId == null || memberId <= 0) {
+            throw new IllegalArgumentException("유효하지 않은 회원 ID입니다.");
+        }
 
         List<EnrollmentDTO> response = service.findById(memberId);
         return ResponseEntity.ok(response);

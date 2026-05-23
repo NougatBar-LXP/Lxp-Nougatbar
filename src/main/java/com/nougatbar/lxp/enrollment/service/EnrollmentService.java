@@ -21,6 +21,10 @@ public class EnrollmentService {
 
     public List<EnrollmentDTO> findById(Long memberId) {
 
+        if(memberId == null || memberId <= 0L) {
+            throw new IllegalArgumentException("유효하지 않은 회원");
+        }
+
         List<Enrollment> enrollments =
                 repository.findByMemberIdOrderByCreatedAtDesc(memberId);
 
