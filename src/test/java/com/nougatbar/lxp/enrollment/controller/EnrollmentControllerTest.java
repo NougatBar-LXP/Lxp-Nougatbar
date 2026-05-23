@@ -23,6 +23,19 @@ public class EnrollmentControllerTest {
 
     @Test
     @WithMockUser
+    @DisplayName("유효한 양수 memberId가 들어오면 200o ok 반환")
+    void EnrollmentSuccess() throws Exception {
+        // given
+        Long memberId = 1L;
+        // when
+        var result = mockMvc.perform(get("/enrollments/members/{memberId}", memberId));
+        // then
+        result.andExpect(status().isOk());
+    }
+
+
+    @Test
+    @WithMockUser
     @DisplayName("음수 memberId가 들어오면 에러를 발생하여 400 에러로 처리")
     void EnrollmentFail() throws Exception {
 
