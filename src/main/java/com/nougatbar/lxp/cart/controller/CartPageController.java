@@ -2,6 +2,7 @@ package com.nougatbar.lxp.cart.controller;
 
 import com.nougatbar.lxp.cart.dto.response.CartResponse;
 import com.nougatbar.lxp.cart.service.CartService;
+import com.nougatbar.lxp.common.util.StaticResourceLocator;
 import com.nougatbar.lxp.course.dto.response.CourseSummaryDTO;
 import com.nougatbar.lxp.course.service.CourseService;
 import java.util.List;
@@ -20,19 +21,30 @@ public class CartPageController {
 
     private final CartService cartService;
     private final CourseService courseService;
+    private final StaticResourceLocator staticResourceLocator;
 
-    public CartPageController(CartService cartService, CourseService courseService) {
+    public CartPageController(CartService cartService,
+                              CourseService courseService,
+                              StaticResourceLocator staticResourceLocator) {
         this.cartService = cartService;
         this.courseService = courseService;
+        this.staticResourceLocator = staticResourceLocator;
     }
 
     @GetMapping("/cart-ui")
     public String showCartPage(Model model) {
         Long memberId = TEMP_MEMBER_ID;
-        List<CartResponse> carts = cartService.findCartsById(memberId);
+
+        List<CartResponse> carts = cartService.findCartsById(memberId)
+                .stream()
+                .map(cart -> CartResponse.from(cart, staticResourceLocator::locate))
+                .toList();
+
         List<CourseSummaryDTO> courses = courseService.listAllCourses();
+
         Set<Long> cartCourseIds =
                 carts.stream().map(CartResponse::courseId).collect(Collectors.toSet());
+
         int totalPrice = carts.stream().mapToInt(CartResponse::price).sum();
 
         model.addAttribute("memberId", memberId);
