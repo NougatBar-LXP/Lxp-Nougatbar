@@ -23,7 +23,9 @@ public class EnrollmentController {
     @GetMapping("/members/{memberId}")
     public ResponseEntity<List<EnrollmentDTO>> getMyEnrollments(@PathVariable Long memberId) {
 
-        memberId = Math.max(0L, memberId);
+        if (memberId == null || memberId <= 0) {
+            throw new IllegalArgumentException("유효하지 않은 회원 ID입니다.");
+        }
 
         List<EnrollmentDTO> response = service.findById(memberId);
         return ResponseEntity.ok(response);
