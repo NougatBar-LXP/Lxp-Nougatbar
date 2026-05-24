@@ -396,8 +396,10 @@
         <div class="course-grid">
             <article class="course-card" th:each="course : ${courses}">
                 <div class="thumbnail">
-                    <img th:if="${course.thumbnailUrl() != null}" th:src="${course.thumbnailUrl()}" th:alt="${course.title()}">
-                    <span th:if="${course.thumbnailUrl() == null}" th:text="${#strings.substring(course.title(), 0, 1)}">C</span>
+                    <!-- carts 페이지가 아닌 courses 페이지에서 course를 선택하고 carts 페이지는 장바구니 내용만 보이도록 수정이 필요함 -->
+                    <!-- 따라서 thumbnailUri 사용은 임시적으로 허용함 (페이지를 재정립하며 수정 예정) -->
+                    <img th:if="${course.thumbnailUri() != null}" th:src="${course.thumbnailUri()}" th:alt="${course.title()}">
+                    <span th:if="${course.thumbnailUri() == null}" th:text="${#strings.substring(course.title(), 0, 1)}">C</span>
                 </div>
                 <div class="course-body">
                     <h2 th:text="${course.title()}">강의 제목</h2>
