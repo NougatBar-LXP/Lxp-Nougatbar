@@ -4,4 +4,6 @@ public enum MemberRoleDTO {
     MEMBER,
     INSTRUCTOR,
     ADMIN
+    
+
 }

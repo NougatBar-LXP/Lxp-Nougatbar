@@ -46,9 +46,13 @@ public class Member {
 
     @Column
     private LocalDateTime updatedAt;
-
++
+    
     @Column
     private LocalDateTime deletedAt;
+
+    // ✅ Builder 패턴 + NOT NULL 방어 처리
+
 
     // 생성 시 자동으로 현재 시간 설정
     @PrePersist
@@ -70,5 +74,34 @@ public class Member {
         this.deletedAt = LocalDateTime.now();
     }
 
+    public Member(String email, String password, String nickname, MemberRole role) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.role = role;
+    }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public MemberRole getRole() {
+        return role;
+    }
 }
