@@ -25,7 +25,7 @@ public class EnrollmentController {
 
         memberId = Math.max(0L, memberId);
 
-        List<EnrollmentDTO> response = service.findById(memberId);
+        List<EnrollmentDTO> response = service.findEnrollmentsByMemberId(memberId);
         return ResponseEntity.ok(response);
     }
 }

@@ -13,7 +13,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/community-ui/**", "/cart-ui/**", "/carts/**", "/css/**", "/community/**").permitAll()
+                        .requestMatchers("/", "/community-ui/**", "/cart-ui/**", "/order-ui/**",
+                                "/enrollment-ui/**", "/carts/**", "/orders/**", "/enrollments/**",
+                                "/css/**", "/community/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults());
