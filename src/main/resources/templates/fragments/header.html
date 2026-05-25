@@ -1,0 +1,14 @@
+<header class="bg-white border-bottom site-header" th:fragment="header">
+  <div class="container py-3">
+    <div class="d-flex flex-wrap align-items-center gap-3">
+      <a class="text-decoration-none d-flex align-items-center gap-2" href="/">
+        <span class="fw-bold text-primary fs-5">ConnectLearn</span>
+      </a>
+      <nav class="d-flex flex-wrap align-items-center gap-2 gap-md-3 me-auto px-3">
+        <a class="btn btn-link text-decoration-none fw-semibold p-0 header-nav-link" th:href="@{/courses}">코스 탐색</a>
+        <a class="btn btn-link text-decoration-none fw-semibold p-0 header-nav-link" th:href="@{/me/enrollments}">내 학습</a>
+      </nav>
+      <a class="btn btn-primary rounded-pill px-4 ms-auto" th:href="@{/auth/login}">로그인</a>
+    </div>
+  </div>
+</header>

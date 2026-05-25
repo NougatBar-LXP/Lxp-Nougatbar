@@ -1,0 +1,33 @@
+.site-header {
+  position: sticky;
+  top: 0;
+}
+
+.header-nav-link {
+  position: relative;
+  display: inline-block;
+  color: #111111 !important;
+  border: 0;
+}
+
+.header-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background-color: var(--bs-primary);
+  transform: translateX(-50%);
+  transition: width 0.28s ease;
+}
+
+.header-nav-link:hover,
+.header-nav-link:focus-visible {
+  color: var(--bs-primary) !important;
+}
+
+.header-nav-link:hover::after,
+.header-nav-link:focus-visible::after {
+  width: 100%;
+}

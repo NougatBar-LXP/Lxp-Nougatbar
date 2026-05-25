@@ -29,7 +29,7 @@ public class CommunityPageController {
         this.communityPageModelAssembler = communityPageModelAssembler;
     }
 
-    @GetMapping({"/", "/community-ui"})
+    @GetMapping("/community-ui")
     public String community(
             @RequestParam(name = "cid", defaultValue = "1") Long courseId,
             @RequestParam(defaultValue = "ALL") String type,
