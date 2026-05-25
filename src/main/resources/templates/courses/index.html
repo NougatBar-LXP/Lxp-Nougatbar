@@ -42,14 +42,8 @@
         <img alt="강좌 썸네일"
              class="card-img-top"
              style="height: 160px; object-fit: cover;"
-             th:if="${thumbnailUrl != null}"
+             th:attr="onerror=|this.onerror=null;this.src='@{/images/nougatbar.png}';|"
              th:src="${thumbnailUrl}">
-        <div
-            class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted"
-            style="height: 160px;"
-            th:if="${thumbnailUrl == null}">
-          No Image
-        </div>
 
         <div class="card-body d-flex flex-column">
           <p class="mb-2">
