@@ -21,7 +21,7 @@ public class EnrollmentService {
     @Transactional(readOnly = true)
     public List<EnrollmentDTO> findEnrollmentsByMemberId(Long memberId) {
         if (memberId == null) {
-            throw new IllegalArgumentException("memberId is required.");
+            throw new IllegalArgumentException("memberId는 필수입니다.");
         }
 
         List<Enrollment> enrollments = repository.findByMemberIdOrderByCreatedAtDesc(memberId);
@@ -36,16 +36,25 @@ public class EnrollmentService {
     @Transactional
     public void createEnrollment(Long memberId, List<CartResponse> carts) {
         if (memberId == null) {
-            throw new IllegalArgumentException("memberId is required.");
+            throw new IllegalArgumentException("memberId는 필수입니다.");
         }
 
         if (carts == null || carts.isEmpty()) {
-            throw new IllegalArgumentException("carts must not be empty.");
+            throw new IllegalArgumentException("carts는 비어있을 수 없습니다.");
         }
 
         for (CartResponse cart : carts) {
-            if (!repository.existsByMemberIdAndCourseId(memberId, cart.courseId())) {
-                repository.save(Enrollment.create(memberId, cart.courseId()));
+            if (cart == null) {
+                throw new IllegalArgumentException("cart는 null일 수 없습니다.");
+            }
+
+            Long courseId = cart.courseId();
+            if (courseId == null) {
+                throw new IllegalArgumentException("courseId는 필수입니다.");
+            }
+
+            if (!repository.existsByMemberIdAndCourseId(memberId, courseId)) {
+                repository.save(Enrollment.create(memberId, courseId));
             }
         }
     }
