@@ -2,13 +2,17 @@ package com.nougatbar.lxp.course.controller;
 
 import com.nougatbar.lxp.common.util.StaticResourceLocator;
 import com.nougatbar.lxp.course.application.CourseAppService;
+import com.nougatbar.lxp.course.dto.response.CourseDetailViewModel;
 import com.nougatbar.lxp.course.dto.response.CourseSummeryViewModel;
+import com.nougatbar.lxp.course.dto.response.SectionDetailViewModel;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -41,5 +45,26 @@ public class CourseController {
         model.addAttribute("thumbnailUrlMap", thumbnailUrlMap);
 
         return "courses/index";
+    }
+
+    @GetMapping("/{courseId}")
+    public String courseDetail(Model model, @PathVariable Long courseId) {
+        CourseDetailViewModel courseDetail = courseAppService.getCourseDetail(courseId);
+
+        String thumbnailUrl = staticResourceLocator.locate(courseDetail.courseThumbnailUri());
+
+        Map<Long, String> lectureContentUrlMap = new HashMap<>();
+        for (SectionDetailViewModel section : courseDetail.courseSections()) {
+            section.lectures().forEach(lecture -> {
+                String contentUrl = staticResourceLocator.locate(lecture.contentUri());
+                lectureContentUrlMap.put(lecture.lectureId(), contentUrl);
+            });
+        }
+
+        model.addAttribute("course", courseDetail);
+        model.addAttribute("thumbnailUrl", thumbnailUrl);
+        model.addAttribute("lectureContentUrlMap", lectureContentUrlMap);
+
+        return "courses/detail";
     }
 }

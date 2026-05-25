@@ -1,0 +1,68 @@
+/* ============================================================
+   Lxp Nougatbar – 강좌 상세 페이지 전용 스타일
+   Bootstrap 5 + theme.css 로드 이후 적용됩니다.
+   ============================================================ */
+
+/* ── 1. Hero 배경 ─────────────────────────────────────────── */
+.course-hero-bg {
+  background-color: #17202a;
+}
+
+.course-hero-title {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1.28;
+  max-width: 640px;
+}
+
+.text-white-75 {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ── 2. 수강 신청 카드 썸네일 ──────────────────────────────── */
+.enroll-thumbnail {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* ── 3. 탭 네비게이션 ──────────────────────────────────────── */
+.course-tab-nav {
+  z-index: 9; /* 헤더(z-index: 10) 바로 아래 */
+}
+
+.course-tab-link {
+  padding: 1rem 0.25rem;
+  margin-right: 1.5rem;
+  color: #495057;
+  font-weight: 700;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+}
+
+.course-tab-link:hover {
+  color: var(--bs-primary);
+  border-bottom-color: var(--bs-primary);
+  background: transparent;
+}
+
+.course-tab-link.active {
+  color: var(--bs-primary) !important;
+  border-bottom-color: var(--bs-primary) !important;
+  background: transparent !important;
+  font-weight: 800;
+}
+
+/* ── 4. 커리큘럼 아코디언 미세 조정 ───────────────────────── */
+.accordion-button:not(.collapsed) {
+  color: var(--bs-primary);
+  background-color: var(--bs-primary-bg-subtle);
+  box-shadow: inset 0 -1px 0 var(--bs-primary-border-subtle);
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.25rem rgba(99, 14, 212, 0.15);
+}
+
+.mission-item {
+  background-color: #fffdf0;
+}

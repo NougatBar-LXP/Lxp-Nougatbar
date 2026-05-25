@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConnectLearn</title>
+
+  <!-- 1. Bootstrap CDN (반드시 먼저 로드) -->
+  <link crossorigin="anonymous"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        rel="stylesheet">
+
+  <!-- 2. 공용 컬러 테마 (Bootstrap 이후 로드해야 오버라이드 적용) -->
+  <link rel="stylesheet" th:href="@{/css/global/theme.css}">
+
+  <!-- 3. 공용 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/global/header.css}">
+
+  <!-- 4. 강좌 상세 전용 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/courses/detail.css}">
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/header::header}"></div>
+
+<!-- ── Hero 섹션 ──────────────────────────────────────────── -->
+<section class="course-hero-bg text-white py-5">
+  <div class="container">
+    <div class="row g-5 align-items-start">
+
+      <!-- 좌측: 코스 정보 -->
+      <div class="col-lg-8">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-3">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+              <a class="text-white-50 text-decoration-none" th:href="@{/courses}">강의</a>
+            </li>
+            <li class="breadcrumb-item active text-white" aria-current="page"
+                th:text="|코스 ${course.courseId}|">코스 1</li>
+          </ol>
+        </nav>
+
+        <!-- 제목 -->
+        <h1 class="fw-bold mb-3 course-hero-title" th:text="${course.courseTitle}">강좌 제목</h1>
+
+        <!-- 설명 -->
+        <p class="text-white-75 mb-4 fs-6 lh-lg" th:text="${course.courseDescription}">강좌 설명</p>
+
+        <!-- 메타 배지 -->
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <span class="badge text-bg-light fw-semibold"
+                th:text="${course.courseStatus}">PUBLISHED</span>
+          <span class="badge text-bg-light fw-semibold"
+                th:text="${course.courseLevel}">BEGINNER</span>
+          <span class="badge text-bg-light fw-semibold"
+                th:text="|강의 ID ${course.courseId}|">강의 ID 1</span>
+          <span class="badge text-bg-light fw-semibold"
+                th:text="|지식공유자 ${course.instructorName}|">지식공유자</span>
+        </div>
+
+        <!-- 태그 -->
+        <div class="d-flex flex-wrap gap-2"
+             th:if="${course.courseTags != null and !course.courseTags.isEmpty()}">
+          <span class="badge rounded-pill bg-white bg-opacity-25 text-white fw-semibold"
+                th:each="tag : ${course.courseTags}"
+                th:text="${tag}">태그</span>
+        </div>
+      </div>
+
+      <!-- 우측: 수강 신청 카드 -->
+      <div class="col-lg-4">
+        <div class="card shadow-lg border-0 overflow-hidden enroll-card">
+          <!-- 썸네일 -->
+          <img class="enroll-thumbnail"
+               th:src="${thumbnailUrl}"
+               th:alt="${course.courseTitle}"
+               th:attr="onerror=|this.onerror=null;this.src='@{/images/nougatbar.png}';|"
+               alt="강좌 썸네일">
+
+          <div class="card-body">
+            <!-- 가격 -->
+            <p class="fs-4 fw-bold mb-3"
+               th:text="${#numbers.formatInteger(course.coursePrice, 0, 'COMMA')} + '원'">0원</p>
+
+            <!-- 버튼 -->
+            <div class="d-grid gap-2 mb-3">
+              <a class="btn btn-primary" href="#">수강신청 하기</a>
+              <a class="btn btn-outline-secondary" href="#">바구니에 담기</a>
+            </div>
+
+            <!-- 코스 정보 -->
+            <hr class="my-2">
+            <dl class="row mb-0 small">
+              <dt class="col-5 text-muted fw-semibold">강의 상태</dt>
+              <dd class="col-7 fw-semibold mb-2" th:text="${course.courseStatus}">PUBLISHED</dd>
+
+              <dt class="col-5 text-muted fw-semibold">난이도</dt>
+              <dd class="col-7 fw-semibold mb-2" th:text="${course.courseLevel}">BEGINNER</dd>
+
+              <dt class="col-5 text-muted fw-semibold">코스 ID</dt>
+              <dd class="col-7 fw-semibold mb-0" th:text="${course.courseId}">1</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── 탭 네비게이션 ──────────────────────────────────────── -->
+<nav class="bg-white border-bottom sticky-top course-tab-nav" aria-label="강의 상세 메뉴">
+  <div class="container">
+    <ul class="nav mb-0">
+      <li class="nav-item">
+        <a class="nav-link course-tab-link active" href="#" aria-current="page">커리큘럼</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link course-tab-link" href="#">커뮤니티</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── 본문 ──────────────────────────────────────────────── -->
+<main class="container py-5">
+
+  <!-- 강의 소개 -->
+  <section class="mb-5">
+    <p class="text-primary small fw-bold text-uppercase mb-1">Course Introduction</p>
+    <h2 class="fw-bold mb-4">강의 소개</h2>
+
+    <p class="text-secondary lh-lg" th:text="${course.courseDescription}">강좌 설명</p>
+
+    <!-- 태그 목록 -->
+    <div class="d-flex flex-wrap gap-2 mt-3"
+         th:if="${course.courseTags != null and !course.courseTags.isEmpty()}">
+      <span class="badge rounded-pill bg-primary-subtle text-primary fw-semibold"
+            th:each="tag : ${course.courseTags}"
+            th:text="${tag}">태그</span>
+    </div>
+
+    <!-- 강사 정보 -->
+    <div class="mt-4 p-4 bg-white rounded border">
+      <p class="small text-muted fw-bold mb-1 text-uppercase">지식공유자</p>
+      <p class="fw-semibold mb-0 fs-5" th:text="${course.instructorName}">강사명</p>
+    </div>
+  </section>
+
+  <!-- 커리큘럼 -->
+  <section>
+    <p class="text-primary small fw-bold text-uppercase mb-1">Curriculum</p>
+    <h2 class="fw-bold mb-4">커리큘럼</h2>
+
+    <!-- 섹션 없음 -->
+    <div class="alert alert-light text-center text-muted border"
+         th:if="${course.courseSections == null or course.courseSections.isEmpty()}">
+      등록된 커리큘럼이 없습니다.
+    </div>
+
+    <!-- 아코디언 -->
+    <div class="accordion" id="curriculumAccordion"
+         th:if="${course.courseSections != null and !course.courseSections.isEmpty()}">
+      <div class="accordion-item"
+           th:each="section, sIter : ${course.courseSections}">
+
+        <h3 class="accordion-header">
+          <button class="accordion-button fw-semibold"
+                  th:classappend="${sIter.index > 0} ? ' collapsed'"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  th:attr="data-bs-target='#section-' + ${section.sectionId},
+                           aria-expanded=${sIter.index == 0 ? 'true' : 'false'},
+                           aria-controls='section-' + ${section.sectionId}">
+            <span class="badge text-bg-secondary me-2 fw-normal"
+                  th:text="${section.sequence}">1</span>
+            <span th:text="${section.title}">섹션 제목</span>
+          </button>
+        </h3>
+
+        <div class="accordion-collapse collapse"
+             th:classappend="${sIter.index == 0} ? ' show'"
+             th:id="|section-${section.sectionId}|">
+          <div class="accordion-body p-0">
+
+            <!-- 강의 목록 -->
+            <ul class="list-group list-group-flush"
+                th:if="${section.lectures != null and !section.lectures.isEmpty()}">
+              <li class="list-group-item d-flex align-items-center gap-3 py-3 px-4"
+                  th:each="lecture : ${section.lectures}">
+                <span class="text-muted">▶</span>
+                <span class="flex-fill fw-medium" th:text="${lecture.title}">강의 제목</span>
+                <span class="badge bg-light text-secondary border ms-auto"
+                      th:text="${lecture.type}">VIDEO</span>
+              </li>
+            </ul>
+
+            <!-- 미션 목록 -->
+            <ul class="list-group list-group-flush"
+                th:if="${section.missions != null and !section.missions.isEmpty()}">
+              <li class="list-group-item d-flex align-items-center gap-3 py-3 px-4 mission-item"
+                  th:each="mission : ${section.missions}">
+                <span class="text-muted">✏</span>
+                <span class="flex-fill fw-medium" th:text="${mission.title}">미션 제목</span>
+                <span class="badge bg-warning text-dark ms-auto">미션</span>
+              </li>
+            </ul>
+
+            <!-- 강의·미션 모두 없음 -->
+            <p class="text-center text-muted py-4 mb-0 small"
+               th:if="${(section.lectures == null or section.lectures.isEmpty())
+                    and (section.missions == null or section.missions.isEmpty())}">
+              등록된 강의가 없습니다.
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div th:replace="~{fragments/footer::footer}"></div>
+
+<script crossorigin="anonymous"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

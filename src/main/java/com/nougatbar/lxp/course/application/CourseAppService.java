@@ -1,6 +1,8 @@
 package com.nougatbar.lxp.course.application;
 
 import com.nougatbar.lxp.course.dto.CourseStatusDTO;
+import com.nougatbar.lxp.course.dto.response.CourseDetailDTO;
+import com.nougatbar.lxp.course.dto.response.CourseDetailViewModel;
 import com.nougatbar.lxp.course.dto.response.CourseSummaryDTO;
 import com.nougatbar.lxp.course.dto.response.CourseSummeryViewModel;
 import com.nougatbar.lxp.course.service.CourseService;
@@ -44,5 +46,23 @@ public class CourseAppService {
         }
 
         return courseSummaries;
+    }
+
+    /**
+     * 특정 강좌에 대한 상세 정보를 조회하는 애플리케이션 서비스 메서드.
+     *
+     * @param courseId 조회할 강좌의 ID
+     * @return 강좌 상세 정보
+     * @throws IllegalStateException 강좌가 존재하지 않거나, 강사 정보를 찾을 수 없는 경우
+     */
+    public CourseDetailViewModel getCourseDetail(Long courseId) {
+        CourseDetailDTO course = courseService.getCourseDetailById(courseId)
+                .orElseThrow(() -> new IllegalStateException("강좌 정보를 찾을 수 없습니다. ID: " + courseId));
+
+        MemberDTO instructor = memberService.getMemberById(course.memberId())
+                .orElseThrow(() -> new IllegalStateException(
+                        "강사 정보를 찾을 수 없습니다. ID: " + course.memberId()));
+
+        return CourseDetailViewModel.from(course, instructor);
     }
 }
