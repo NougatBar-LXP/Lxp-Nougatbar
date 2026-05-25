@@ -22,6 +22,7 @@ public class SecurityConfig {
                         "/community-ui/**",
                         "/cart-ui/**",
                         "/carts/**",
+                        "/courses/**",
                         "/community/**").permitAll().anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults());
 

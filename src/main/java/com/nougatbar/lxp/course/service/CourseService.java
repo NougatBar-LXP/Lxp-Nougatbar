@@ -2,6 +2,7 @@ package com.nougatbar.lxp.course.service;
 
 import com.nougatbar.lxp.course.dto.response.CourseDetailDTO;
 import com.nougatbar.lxp.course.dto.response.CourseSummaryDTO;
+import com.nougatbar.lxp.course.entity.Course;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,8 @@ public interface CourseService {
      * @return {@link CourseSummaryDTO} 객체들의 불변 리스트
      */
     List<CourseSummaryDTO> listAllCourses();
+
+    List<Course> listAllCourses2();
 
     /**
      * 주어진 강좌 ID에 해당하는 강좌의 요약 정보를 조회합니다. 상세 정보는 포함되지 않습니다.
