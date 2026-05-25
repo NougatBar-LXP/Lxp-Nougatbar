@@ -1,7 +1,5 @@
 package com.nougatbar.lxp.order.controller;
 
-import com.nougatbar.lxp.cart.dto.response.CartResponse;
-import com.nougatbar.lxp.cart.service.CartService;
 import com.nougatbar.lxp.order.dto.response.OrderResponse;
 import com.nougatbar.lxp.order.service.OrderService;
 import java.net.URI;
@@ -21,17 +19,13 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    private final CartService cartService;
-
-    public OrderController(OrderService orderService, CartService cartService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.cartService = cartService;
     }
 
     @PostMapping("/orders")
     public ResponseEntity<OrderResponse> createOrder() {
-        List<CartResponse> carts = cartService.findCartsById(TEMP_MEMBER_ID);
-        OrderResponse response = orderService.createOrder(TEMP_MEMBER_ID, carts);
+        OrderResponse response = orderService.createOrder(TEMP_MEMBER_ID);
 
         return ResponseEntity.created(URI.create("/orders/" + response.orderId())).body(response);
     }

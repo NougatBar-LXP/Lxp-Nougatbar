@@ -38,7 +38,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse createOrder(Long memberId, List<CartResponse> carts) {
+    public OrderResponse createOrder(Long memberId) {
         if (memberId == null) {
             throw new IllegalArgumentException("memberId는 필수입니다");
         }
@@ -46,7 +46,8 @@ public class OrderService {
         memberService.getMemberById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "멤버를 찾을 수 없습니다. memberId=" + memberId));
-
+        
+        List<CartResponse> carts = cartService.findCartsById(memberId);
         if (carts == null || carts.isEmpty()) {
             throw new IllegalArgumentException("카트 안에 상품이 존재하지 않습니다.");
         }

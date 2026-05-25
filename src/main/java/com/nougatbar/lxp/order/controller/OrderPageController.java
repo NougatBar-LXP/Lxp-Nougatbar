@@ -1,7 +1,5 @@
 package com.nougatbar.lxp.order.controller;
 
-import com.nougatbar.lxp.cart.dto.response.CartResponse;
-import com.nougatbar.lxp.cart.service.CartService;
 import com.nougatbar.lxp.order.dto.response.OrderResponse;
 import com.nougatbar.lxp.order.service.OrderService;
 import java.util.List;
@@ -19,11 +17,9 @@ public class OrderPageController {
     private static final Long TEMP_MEMBER_ID = 1L;
 
     private final OrderService orderService;
-    private final CartService cartService;
 
-    public OrderPageController(OrderService orderService, CartService cartService) {
+    public OrderPageController(OrderService orderService) {
         this.orderService = orderService;
-        this.cartService = cartService;
     }
 
     @GetMapping
@@ -43,8 +39,7 @@ public class OrderPageController {
 
     @PostMapping
     public String createOrder() {
-        List<CartResponse> carts = cartService.findCartsById(TEMP_MEMBER_ID);
-        OrderResponse order = orderService.createOrder(TEMP_MEMBER_ID, carts);
+        OrderResponse order = orderService.createOrder(TEMP_MEMBER_ID);
         return "redirect:/order-ui/" + order.orderId();
     }
 
