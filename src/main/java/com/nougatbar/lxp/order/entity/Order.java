@@ -1,6 +1,5 @@
 package com.nougatbar.lxp.order.entity;
 
-import com.nougatbar.lxp.cart.dto.response.CartResponse;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,14 +51,18 @@ public class Order {
         this.status = Objects.requireNonNull(status, "status는 필수입니다.");
     }
 
-    public static Order create(Long memberId, List<CartResponse> carts) {
-        Order order = new Order(memberId, calculateTotal(carts), OrderStatus.PENDING);
-        carts.forEach(cart -> order.addOrderLine(cart.courseId(), cart.price()));
+    public static Order create(Long memberId, List<OrderItem> orderItems) {
+        Objects.requireNonNull(orderItems, "orderItems는 필수입니다.");
+        if (orderItems.isEmpty()) {
+            throw new IllegalArgumentException("orderItems는 비어있을 수 없습니다.");
+        }
+        Order order = new Order(memberId, calculateTotal(orderItems), OrderStatus.PENDING);
+        orderItems.forEach(item -> order.addOrderLine(item.courseId(), item.price()));
         return order;
     }
 
-    private static Long calculateTotal(List<CartResponse> carts) {
-        return carts.stream().mapToLong(CartResponse::price).sum();
+    private static Long calculateTotal(List<OrderItem> orderItems) {
+        return orderItems.stream().mapToLong(OrderItem::price).sum();
     }
 
     public Long getOrderId() {

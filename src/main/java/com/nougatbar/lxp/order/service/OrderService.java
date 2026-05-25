@@ -7,6 +7,7 @@ import com.nougatbar.lxp.enrollment.service.EnrollmentService;
 import com.nougatbar.lxp.member.service.MemberService;
 import com.nougatbar.lxp.order.dto.response.OrderResponse;
 import com.nougatbar.lxp.order.entity.Order;
+import com.nougatbar.lxp.order.entity.OrderItem;
 import com.nougatbar.lxp.order.repository.OrderRepository;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,10 @@ public class OrderService {
             throw new IllegalArgumentException("카트 안에 상품이 존재하지 않습니다.");
         }
 
-        Order order = orderRepository.save(Order.create(memberId, carts));
+        List<OrderItem> orderItems =
+                carts.stream().map(cart -> new OrderItem(cart.courseId(), cart.price())).toList();
+
+        Order order = orderRepository.save(Order.create(memberId, orderItems));
         enrollmentService.createEnrollment(memberId, carts);
         cartService.deleteAllCart(memberId);
 
@@ -58,8 +62,12 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderResponse getOrderById(Long orderId) {
-        Order order = orderRepository.findById(orderId)
+    public OrderResponse getOrderById(Long memberId, Long orderId) {
+        if (memberId == null || orderId == null) {
+            throw new IllegalArgumentException("memberId와 orderId 필수입니다.");
+        }
+
+        Order order = orderRepository.findByMemberIdAndOrderId(memberId, orderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Order를 찾을 수 없습니다."));
         return OrderResponse.from(order, courseService);

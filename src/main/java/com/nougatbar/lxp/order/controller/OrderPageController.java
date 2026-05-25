@@ -36,7 +36,7 @@ public class OrderPageController {
     @GetMapping("/{orderId}")
     public String showOrder(@PathVariable Long orderId, Model model) {
         List<OrderResponse> orders = orderService.getOrders(TEMP_MEMBER_ID);
-        OrderResponse selectedOrder = orderService.getOrderById(orderId);
+        OrderResponse selectedOrder = orderService.getOrderById(TEMP_MEMBER_ID, orderId);
         addOrderModel(model, orders, selectedOrder);
         return "order/index";
     }
