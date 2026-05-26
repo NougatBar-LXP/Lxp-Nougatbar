@@ -210,7 +210,7 @@
         <div class="thumb-wrap">
           <img alt="강좌 썸네일"
                th:attr="onerror=|this.onerror=null;this.src='@{/images/nougatbar.png}';|"
-               th:src="${thumbnailUrlMap[enrollment.courseId()] != null ? thumbnailUrlMap[enrollment.courseId()] : '/images/nougatbar.png'}">
+               th:src="${thumbnailUrlMap[enrollment.courseId()]} ?: @{/images/nougatbar.png}">
           <span class="category-pill"
                 th:text="${course != null ? course.level() : 'Course'}">Course</span>
         </div>
