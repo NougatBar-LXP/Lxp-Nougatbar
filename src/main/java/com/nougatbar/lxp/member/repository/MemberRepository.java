@@ -9,10 +9,14 @@ import org.springframework.stereotype.Repository;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 로그인 UserId로 회원 조회
-    Optional<Member> findByUserId(String userId);
+    Optional<Member> findById(Long id);
+
+    Optional<Member> findByEmail(String email);
 
     // 회원 가입 : 중복 체크
-    boolean existsByUserId(String userId);
+    boolean existsById(Long id);
+
+    boolean existsByEmail(String email);
 
     boolean existsByNickname(String nickname);
 }

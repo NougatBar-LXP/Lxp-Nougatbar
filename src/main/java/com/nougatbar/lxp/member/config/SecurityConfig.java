@@ -2,8 +2,6 @@ package com.nougatbar.lxp.member.config;
 
 
 import com.nougatbar.lxp.member.entity.MemberRole;
-import com.nougatbar.lxp.member.handler.AuthFailHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,15 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    private final AuthFailHandler authFailHandler;
-
-
-    @Autowired
-    public SecurityConfig(AuthFailHandler authFailHandler) {
-        this.authFailHandler = authFailHandler;
-    }
-
     // 비밀번호 단방향 해시용 인코더
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,7 +33,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> {
                     // 비로그인 사용자도 접근 가능한 공개 경로, /auth/fail -> 로그인 실패 페이지 현재 없음
-                    auth.requestMatchers("/auth/login", "/auth/fail", "/members/signup", "/").permitAll();
+                    auth.requestMatchers("/", "/login", "/logout", "/error").permitAll();
                     // 관리자 페이지 x
                     auth.requestMatchers("/admin/**").hasAnyAuthority(MemberRole.ADMIN.getValue());
                     // 일반회원 전용 영역
@@ -54,11 +43,8 @@ public class SecurityConfig {
                 }
                 // 로그인 설정
         ).formLogin(form -> {
-            form.loginPage("/auth/login");
             form.defaultSuccessUrl("/", true);
-            form.failureHandler(authFailHandler);
         }).logout(logout -> {
-            logout.logoutUrl("/auth/logout");
             // JSESSION 쿠키 제거 - 브라우저에 남은 세션 식별자도 함께 정리
             logout.deleteCookies("JSESSIONID");
             logout.invalidateHttpSession(true);
@@ -68,7 +54,7 @@ public class SecurityConfig {
             session.maximumSessions(1);
             session.invalidSessionUrl("/");
 
-        }).csrf(csrf -> csrf.disable());
+        });
 
         return http.build();
 

@@ -108,7 +108,23 @@ public class Member {
         return nickname;
     }
 
+    public MemberStatus getStatus() {
+        return status;
+    }
+
     public MemberRole getRole() {
         return role;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
     }
 }
