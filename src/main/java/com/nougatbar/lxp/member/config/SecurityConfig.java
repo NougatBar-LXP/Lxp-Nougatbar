@@ -44,7 +44,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> {
                     // 비로그인 사용자도 접근 가능한 공개 경로, /auth/fail -> 로그인 실패 페이지 현재 없음
-                    auth.requestMatchers("/auth/login", "/auth/signup", "/").permitAll();
+                    auth.requestMatchers("/auth/login", "/auth/fail", "/members/signup", "/").permitAll();
                     // 관리자 페이지 x
                     auth.requestMatchers("/admin/**").hasAnyAuthority(MemberRole.ADMIN.getValue());
                     // 일반회원 전용 영역
