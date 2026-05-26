@@ -24,7 +24,12 @@ public class EnrollmentService {
             throw new IllegalArgumentException("memberId는 필수입니다.");
         }
 
-        List<Enrollment> enrollments = repository.findByMemberIdOrderByCreatedAtDesc(memberId);
+        if(memberId == null || memberId <= 0L) {
+            throw new IllegalArgumentException("유효하지 않은 회원");
+        }
+
+        List<Enrollment> enrollments =
+                repository.findByMemberIdOrderByCreatedAtDesc(memberId);
 
         if (enrollments.isEmpty()) {
             return Collections.emptyList();
