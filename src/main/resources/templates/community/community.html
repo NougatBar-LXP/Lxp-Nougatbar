@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConnectLearn</title>
+
+  <link crossorigin="anonymous"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/global/theme.css}">
+  <link rel="stylesheet" th:href="@{/css/global/header.css}">
+  <link rel="stylesheet" th:href="@{/css/courses/detail.css}">
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/header::header}"></div>
+
+<th:block th:replace="~{courses/_detail_header :: header('community')}"></th:block>
+
+<main class="container py-5">
+  <th:block th:replace="~{community/_panel :: panel}"></th:block>
+</main>
+
+<div th:replace="~{fragments/footer::footer}"></div>
+
+<script crossorigin="anonymous"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

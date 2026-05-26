@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConnectLearn</title>
+
+  <link crossorigin="anonymous"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/global/theme.css}">
+  <link rel="stylesheet" th:href="@{/css/global/header.css}">
+  <link rel="stylesheet" th:href="@{/css/courses/detail.css}">
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/header::header}"></div>
+
+<th:block th:replace="~{courses/_detail_header :: header('community')}"></th:block>
+
+<main class="container py-5">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <p class="text-primary small fw-bold text-uppercase mb-1">Course Community</p>
+      <h2 class="fw-bold mb-0">게시글 상세</h2>
+    </div>
+    <a class="btn btn-outline-secondary"
+       th:href="@{/courses/{courseId}/community(courseId=${course.courseId}, type=${currentType}, q=${keyword})}">
+      목록으로
+    </a>
+  </div>
+
+  <article class="card border-0 shadow-sm">
+    <div class="card-body p-4 p-lg-5">
+      <div class="d-flex flex-wrap align-items-center gap-2 text-muted small mb-3">
+        <span class="badge text-bg-primary"
+              th:text="${selectedCommunity.type().name() == 'COURSE' ? '코스' : (selectedCommunity.type().name() == 'LECTURE' ? '강의' : '미션')}">코스</span>
+        <span th:text="|작성자 ${selectedCommunity.memberId()}|">작성자 1</span>
+        <span th:text="${#temporals.format(selectedCommunity.createdAt(), 'yyyy. MM. dd. HH:mm')}">2026. 05. 21. 10:00</span>
+        <span th:if="${selectedCommunity.updatedAt() != null}"
+              th:text="|수정 ${#temporals.format(selectedCommunity.updatedAt(), 'yyyy. MM. dd. HH:mm')}|">수정 2026. 05. 21. 10:00</span>
+      </div>
+
+      <h3 class="fw-bold mb-4" th:text="${selectedCommunity.title()}">게시글 제목</h3>
+      <p class="lh-lg text-secondary mb-0" style="white-space: pre-wrap;" th:text="${selectedCommunity.content()}">게시글 내용</p>
+
+      <div class="d-flex flex-wrap gap-2 mt-5">
+        <a class="btn btn-outline-secondary"
+           th:href="@{/courses/{courseId}/community(courseId=${course.courseId}, communityId=${selectedCommunity.communityId()}, communityMode='edit', type=${currentType}, q=${keyword})}">
+          수정
+        </a>
+        <form th:action="@{/community-ui/{id}/delete(id=${selectedCommunity.communityId()})}" method="post">
+          <button class="btn btn-outline-danger" type="submit">삭제</button>
+        </form>
+      </div>
+    </div>
+  </article>
+</main>
+
+<div th:replace="~{fragments/footer::footer}"></div>
+
+<script crossorigin="anonymous"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
