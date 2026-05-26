@@ -4,6 +4,18 @@
 -- 구조: 강좌 20개 → 섹션 66개 → 강의 131개 → 미션 20개 → 태그 + 매핑
 -- ============================================
 
+-- 0. MEMBERS 테이블 삽입 (테스트용 고정 유저 2명)
+-- member_id=1  : 일반 학습자 (MEMBER 역할)
+-- member_id=9999: 강사 계정 (INSTRUCTOR 역할, courses 더미 데이터 소유자)
+-- 비밀번호 해시값은 BCrypt("0000") 결과입니다.
+
+INSERT INTO members (member_id, email, password, name, nickname, status, role, created_at) VALUES
+(1,    'user@test.com',       '$2a$12$SZSwnAy2jJTu50qpMiynbOmhVMgvBSEzw57DZ0FzCzO2j/HSmb70m', '테스트유저',   'testuser',   'ACTIVE', 'MEMBER',     '2026-01-01 00:00:00'),
+(9999, 'instructor@test.com', '$2a$12$SZSwnAy2jJTu50qpMiynbOmhVMgvBSEzw57DZ0FzCzO2j/HSmb70m', '테스트강사',   'instructor', 'ACTIVE', 'INSTRUCTOR', '2026-01-01 00:00:00');
+
+-- IDENTITY 시퀀스를 10000으로 재설정하여 이후 자동 생성 ID와의 충돌 방지
+ALTER TABLE members ALTER COLUMN member_id RESTART WITH 10000;
+
 -- 1. COURSES 테이블 삽입 (20개 강좌)
 -- 모두 member_id=9999, status=PUBLISHED 고정
 
