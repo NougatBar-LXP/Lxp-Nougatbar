@@ -31,4 +31,6 @@ public interface CourseService {
      * @return 강좌가 존재하는 경우 {@link CourseDetailDTO} 객체를 감싸는 Optional, 존재하지 않는 경우 빈 Optional
      */
     Optional<CourseDetailDTO> getCourseDetailById(Long courseId);
+
+    List<CourseSummaryDTO> searchCoursesByTitle(String title);
 }

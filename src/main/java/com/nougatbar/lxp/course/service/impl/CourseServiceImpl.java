@@ -38,4 +38,12 @@ public class CourseServiceImpl implements CourseService {
     public Optional<CourseDetailDTO> getCourseDetailById(Long courseId) {
         return courseRepository.findById(courseId).map(CourseDetailDTO::from);
     }
+
+    @Override
+    public List<CourseSummaryDTO> searchCoursesByTitle(String title) {
+        return courseRepository.findByTitleContainingIgnoreCase(title)
+                .stream()
+                .map(CourseSummaryDTO::from)
+                .toList();
+    }
 }

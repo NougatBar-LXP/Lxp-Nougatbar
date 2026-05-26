@@ -58,6 +58,24 @@ public class CourseAppService {
         return courseSummaries;
     }
 
+    public List<CourseSummeryViewModel> searchCourseSummariesByTitle(String title) {
+        List<CourseSummeryViewModel> courseSummaries = new ArrayList<>();
+
+        for (CourseSummaryDTO course : courseService.searchCoursesByTitle(title)) {
+            // 미승인 강좌 제외
+            if (!CourseStatusDTO.PUBLISHED.equals(course.status())) {
+                continue;
+            }
+
+            MemberDTO instructor = memberService.getMemberById(course.memberId())
+                    .orElseThrow(() -> new BaseException(ErrorCode.INSTRUCTOR_NOT_FOUND));
+
+            courseSummaries.add(CourseSummeryViewModel.from(course, instructor));
+        }
+
+        return courseSummaries;
+    }
+
     /**
      * 특정 강좌에 대한 상세 정보를 조회하는 애플리케이션 서비스 메서드.
      *
