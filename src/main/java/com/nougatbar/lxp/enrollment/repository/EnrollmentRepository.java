@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
     List<Enrollment> findByMemberIdOrderByCreatedAtDesc(Long memberId);
+
+    boolean existsByMemberIdAndCourseId(Long memberId, Long courseId);
 }

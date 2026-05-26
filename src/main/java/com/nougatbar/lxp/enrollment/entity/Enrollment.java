@@ -26,7 +26,7 @@ public class Enrollment {
     private Long courseId;
 
     @Column(name = "status", nullable = false)
-    private Boolean isActive;
+    private EnrollmentStatus status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -34,10 +34,13 @@ public class Enrollment {
     protected Enrollment() {
     }
 
-    public Enrollment(Boolean isActive, Long courseId, Long memberId) {
-        this.isActive = (isActive != null) ? isActive : false;
-        this.courseId = Objects.requireNonNull(courseId, "강좌 정보는 필수 입니다");
-        this.memberId = Objects.requireNonNull(memberId, "회원 정보는 필수 입니다");
+    private Enrollment(Long memberId, Long courseId) {
+        this.memberId = Objects.requireNonNull(memberId, "memberId is required.");
+        this.courseId = Objects.requireNonNull(courseId, "courseId is required.");
+    }
+
+    public static Enrollment create(Long memberId, Long courseId) {
+        return new Enrollment(memberId, courseId);
     }
 
     public Long getEnrollmentId() {
@@ -52,8 +55,9 @@ public class Enrollment {
         return courseId;
     }
 
-    public Boolean getStatus() {
-        return isActive;
+
+    public EnrollmentStatus getStatus() {
+        return status;
     }
 
     public LocalDateTime getCreatedAt() {
