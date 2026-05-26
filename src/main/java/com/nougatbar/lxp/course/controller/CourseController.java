@@ -68,6 +68,7 @@ public class CourseController {
         model.addAttribute("course", courseDetail);
         model.addAttribute("thumbnailUrl", thumbnailUrl);
         model.addAttribute("lectureContentUrlMap", lectureContentUrlMap);
+        model.addAttribute("isEnrolled", courseDetail.isEnrolled());
 
         return "courses/detail";
     }

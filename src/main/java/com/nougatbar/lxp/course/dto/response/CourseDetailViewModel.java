@@ -18,8 +18,11 @@ public record CourseDetailViewModel(Long courseId,
                                     List<String> courseTags,
                                     List<SectionDetailViewModel> courseSections,
                                     Long instructorId,
-                                    String instructorName) {
-    public static CourseDetailViewModel from(CourseDetailDTO courseDetail, MemberDTO instructor) {
+                                    String instructorName,
+                                    boolean isEnrolled) {
+    public static CourseDetailViewModel from(CourseDetailDTO courseDetail,
+                                             MemberDTO instructor,
+                                             boolean isEnrolled) {
         return new CourseDetailViewModel(courseDetail.courseId(),
                 courseDetail.title(),
                 courseDetail.description(),
@@ -37,6 +40,7 @@ public record CourseDetailViewModel(Long courseId,
                         .sorted()
                         .toList(),
                 instructor.memberId(),
-                instructor.name());
+                instructor.name(),
+                isEnrolled);
     }
 }
