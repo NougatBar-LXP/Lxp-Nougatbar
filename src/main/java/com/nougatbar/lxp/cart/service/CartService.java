@@ -1,6 +1,6 @@
 package com.nougatbar.lxp.cart.service;
 
-import com.nougatbar.lxp.cart.dto.response.CartResponse;
+import com.nougatbar.lxp.cart.dto.response.CartDTO;
 import com.nougatbar.lxp.cart.entity.Cart;
 import com.nougatbar.lxp.cart.repository.CartRepository;
 import com.nougatbar.lxp.course.dto.response.CourseSummaryDTO;
@@ -27,7 +27,7 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartResponse> findCartsById(Long memberId) {
+    public List<CartDTO> findCartsById(Long memberId) {
         if (memberId == null) {
             throw new IllegalArgumentException("memberId가 필요합니다.");
         }
@@ -41,7 +41,7 @@ public class CartService {
     }
 
     @Transactional
-    public CartResponse addCart(Long memberId, Long courseId) {
+    public CartDTO addCart(Long memberId, Long courseId) {
         if (memberId == null || courseId == null) {
             throw new IllegalArgumentException("memberId와 courseId가 필요합니다.");
         }
@@ -88,10 +88,10 @@ public class CartService {
                         "강좌를 찾을 수 없습니다. courseId=" + courseId));
     }
 
-    private CartResponse toCartResponse(MemberDTO member, Cart cart) {
+    private CartDTO toCartResponse(MemberDTO member, Cart cart) {
         CourseSummaryDTO course = getCourseSummaryById(cart.getCourseId());
 
-        return new CartResponse(course.courseId(),
+        return new CartDTO(course.courseId(),
                 member,
                 course.title(),
                 course.price(),

@@ -1,7 +1,9 @@
 package com.nougatbar.lxp.cart.controller;
 
+import com.nougatbar.lxp.cart.dto.response.CartDTO;
 import com.nougatbar.lxp.cart.dto.response.CartResponse;
 import com.nougatbar.lxp.cart.service.CartService;
+import com.nougatbar.lxp.common.util.StaticResourceLocator;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -20,20 +22,27 @@ public class CartController {
     private static final Long TEMP_MEMBER_ID = 1L;
 
     private final CartService cartService;
+    private final StaticResourceLocator staticResourceLocator;
 
-    public CartController(CartService cartService) {
+    public CartController(CartService cartService, StaticResourceLocator staticResourceLocator) {
         this.cartService = cartService;
+        this.staticResourceLocator = staticResourceLocator;
     }
 
     @GetMapping
     public ResponseEntity<List<CartResponse>> findCarts() {
-        List<CartResponse> response = cartService.findCartsById(TEMP_MEMBER_ID);
+        List<CartDTO> cartDTOs = cartService.findCartsById(TEMP_MEMBER_ID);
+        List<CartResponse> response = cartDTOs.stream()
+                .map(cart -> CartResponse.from(cart, staticResourceLocator::locate))
+                .toList();
+
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<CartResponse> addCart(@RequestParam Long courseId) {
-        CartResponse response = cartService.addCart(TEMP_MEMBER_ID, courseId);
+        CartDTO dto = cartService.addCart(TEMP_MEMBER_ID, courseId);
+        CartResponse response = CartResponse.from(dto, staticResourceLocator::locate);
         return ResponseEntity.created(URI.create("/carts/" + response.courseId())).body(response);
     }
 

@@ -401,27 +401,36 @@
           <span th:if="${course.thumbnailUri() == null}"
                 th:text="${#strings.substring(course.title(), 0, 1)}">C</span>
         </div>
-        <div class="course-body">
-          <h2 th:text="${course.title()}">강의 제목</h2>
-          <p class="description" th:text="${course.description()}">강의 설명</p>
-          <div class="meta">
-            <span th:text="|Course #${course.courseId()}|">Course #1</span>
-            <span th:text="${course.level()}">EASY</span>
-            <strong class="price"
-                    th:text="${#numbers.formatInteger(course.price(), 0, 'COMMA')} + '원'">30,000원</strong>
-          </div>
-          <div class="course-actions">
-            <form method="post" th:action="@{/cart-ui}"
-                  th:if="${!cartCourseIds.contains(course.courseId())}">
-              <input th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"
-                     type="hidden">
-              <input name="courseId" th:value="${course.courseId()}" type="hidden">
-              <button class="primary-button" type="submit">장바구니 담기</button>
-            </form>
-            <button class="done-button" disabled
-                    th:if="${cartCourseIds.contains(course.courseId())}" type="button">담김
-            </button>
-          </div>
+    </section>
+
+    <section>
+        <h2 class="section-heading">수강 가능한 강의</h2>
+        <div class="course-grid">
+            <article class="course-card" th:each="course : ${courses}">
+                <div class="thumbnail">
+                    <!-- carts 페이지가 아닌 courses 페이지에서 course를 선택하고 carts 페이지는 장바구니 내용만 보이도록 수정이 필요함 -->
+                    <!-- 따라서 thumbnailUri 사용은 임시적으로 허용함 (페이지를 재정립하며 수정 예정) -->
+                    <img th:if="${course.thumbnailUri() != null}" th:src="${course.thumbnailUri()}" th:alt="${course.title()}">
+                    <span th:if="${course.thumbnailUri() == null}" th:text="${#strings.substring(course.title(), 0, 1)}">C</span>
+                </div>
+                <div class="course-body">
+                    <h2 th:text="${course.title()}">강의 제목</h2>
+                    <p class="description" th:text="${course.description()}">강의 설명</p>
+                    <div class="meta">
+                        <span th:text="|Course #${course.courseId()}|">Course #1</span>
+                        <span th:text="${course.level()}">EASY</span>
+                        <strong class="price" th:text="${#numbers.formatInteger(course.price(), 0, 'COMMA')} + '원'">30,000원</strong>
+                    </div>
+                    <div class="course-actions">
+                        <form th:if="${!cartCourseIds.contains(course.courseId())}" th:action="@{/cart-ui}" method="post">
+                            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <input type="hidden" name="courseId" th:value="${course.courseId()}">
+                            <button class="primary-button" type="submit">장바구니 담기</button>
+                        </form>
+                        <button class="done-button" type="button" th:if="${cartCourseIds.contains(course.courseId())}" disabled>담김</button>
+                    </div>
+                </div>
+            </article>
         </div>
       </article>
     </div>

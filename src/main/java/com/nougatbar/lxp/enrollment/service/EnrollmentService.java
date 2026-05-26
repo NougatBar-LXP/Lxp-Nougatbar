@@ -1,6 +1,6 @@
 package com.nougatbar.lxp.enrollment.service;
 
-import com.nougatbar.lxp.cart.dto.response.CartResponse;
+import com.nougatbar.lxp.cart.dto.response.CartDTO;
 import com.nougatbar.lxp.enrollment.dto.response.EnrollmentDTO;
 import com.nougatbar.lxp.enrollment.entity.Enrollment;
 import com.nougatbar.lxp.enrollment.repository.EnrollmentRepository;
@@ -33,7 +33,7 @@ public class EnrollmentService {
     }
 
     @Transactional
-    public void createEnrollment(Long memberId, List<CartResponse> carts) {
+    public void createEnrollment(Long memberId, List<CartDTO> carts) {
         if (memberId == null) {
             throw new IllegalArgumentException("memberId는 필수입니다.");
         }
@@ -42,7 +42,7 @@ public class EnrollmentService {
             throw new IllegalArgumentException("carts는 비어있을 수 없습니다.");
         }
 
-        for (CartResponse cart : carts) {
+        for (CartDTO cart : carts) {
             if (cart == null) {
                 throw new IllegalArgumentException("cart는 null일 수 없습니다.");
             }
