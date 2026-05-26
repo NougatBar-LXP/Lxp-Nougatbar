@@ -20,17 +20,11 @@ public class EnrollmentService {
 
     @Transactional(readOnly = true)
     public List<EnrollmentDTO> findEnrollmentsByMemberId(Long memberId) {
-        if (memberId == null) {
+        if (memberId == null || memberId <= 0L) {
             throw new IllegalArgumentException("memberId는 필수입니다.");
         }
 
-        if(memberId == null || memberId <= 0L) {
-            throw new IllegalArgumentException("유효하지 않은 회원");
-        }
-
-        List<Enrollment> enrollments =
-                repository.findByMemberIdOrderByCreatedAtDesc(memberId);
-
+        List<Enrollment> enrollments = repository.findByMemberIdOrderByCreatedAtDesc(memberId);
         if (enrollments.isEmpty()) {
             return Collections.emptyList();
         }

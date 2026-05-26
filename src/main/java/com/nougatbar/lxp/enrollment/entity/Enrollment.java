@@ -26,7 +26,7 @@ public class Enrollment {
     private Long courseId;
 
     @Column(name = "status", nullable = false)
-    private Boolean isActive = false;
+    private EnrollmentStatus status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -55,8 +55,9 @@ public class Enrollment {
         return courseId;
     }
 
-    public Boolean getStatus() {
-        return isActive;
+
+    public EnrollmentStatus getStatus() {
+        return status;
     }
 
     public LocalDateTime getCreatedAt() {
