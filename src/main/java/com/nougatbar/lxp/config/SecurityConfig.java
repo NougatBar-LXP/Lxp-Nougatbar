@@ -21,8 +21,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/",
                         "/community-ui/**",
                         "/cart-ui/**",
+                        "/order-ui/**",
+                        "/enrollment-ui/**",
                         "/carts/**",
+                        "/orders/**",
                         "/courses/**",
+                        "/enrollments/**",
                         "/community/**").permitAll().anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults());
 

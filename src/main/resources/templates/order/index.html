@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>LXP Orders</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --green: #00c471;
+      --green-dark: #00a85f;
+      --blue: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .header-inner,
+    .page {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      display: flex;
+      min-height: 64px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand,
+    .nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--green);
+      color: #fff;
+    }
+
+    .nav a,
+    .member-chip {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0 12px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .page {
+      display: grid;
+      gap: 26px;
+      padding: 34px 0 70px;
+    }
+
+    .summary {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .summary h1 {
+      margin-bottom: 10px;
+      font-size: 32px;
+      line-height: 1.25;
+    }
+
+    .summary p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel,
+    .empty,
+    .order-list a,
+    .line-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .panel {
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding: 16px 18px;
+    }
+
+    .panel-header h2 {
+      margin-bottom: 0;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .badge {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      border-radius: 4px;
+      padding: 0 10px;
+      background: #ecfdf5;
+      color: var(--green-dark);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .order-list {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .order-list a {
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+    }
+
+    .order-list a.active {
+      border-color: var(--green);
+      box-shadow: inset 4px 0 0 var(--green);
+    }
+
+    .order-title,
+    .detail-total {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-weight: 900;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .detail-body {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .detail-total {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 16px;
+      font-size: 18px;
+    }
+
+    .detail-total strong,
+    .price {
+      color: var(--text);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .line-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .line-item {
+      display: grid;
+      grid-template-columns: 116px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .thumbnail {
+      position: relative;
+      display: grid;
+      min-height: 116px;
+      place-items: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(0, 196, 113, 0.95), rgba(37, 99, 235, 0.92));
+      color: #fff;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .thumbnail img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .line-body {
+      min-width: 0;
+      padding: 16px;
+    }
+
+    .line-body h3 {
+      margin-bottom: 8px;
+      font-size: 19px;
+      line-height: 1.35;
+    }
+
+    .description {
+      display: -webkit-box;
+      overflow: hidden;
+      margin-bottom: 12px;
+      color: #4b5563;
+      line-height: 1.55;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .empty {
+      display: grid;
+      min-height: 260px;
+      place-items: center;
+      padding: 28px;
+      text-align: center;
+    }
+
+    .empty h2 {
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .empty p {
+      margin-bottom: 18px;
+      color: var(--muted);
+    }
+
+    .primary-button {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 4px;
+      padding: 0 16px;
+      background: var(--green);
+      color: #fff;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 900;
+    }
+
+    .primary-button:hover {
+      background: var(--green-dark);
+    }
+
+    @media (max-width: 820px) {
+      .header-inner,
+      .page {
+        width: min(100% - 28px, 1080px);
+      }
+
+      .header-inner,
+      .summary {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .line-item {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" th:href="@{/order-ui}">
+      <span class="brand-mark">L</span>
+      <span>LXP Orders</span>
+    </a>
+    <nav class="nav">
+      <a th:href="@{/cart-ui}">Cart</a>
+      <a th:href="@{/enrollment-ui}">Enrollment</a>
+      <span class="member-chip" th:text="|Member #${memberId}|">Member #1</span>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+  <section class="summary">
+    <div>
+      <h1>주문 내역</h1>
+      <p th:text="|총 ${orderCount}건의 주문이 있습니다.|">총 0건의 주문이 있습니다.</p>
+    </div>
+
+  </section>
+
+  <section class="empty" th:if="${#lists.isEmpty(orders)}">
+    <div>
+      <h2>아직 주문 내역이 없습니다.</h2>
+      <p>장바구니에서 강의를 담은 뒤 주문을 생성해보세요.</p>
+      <a class="primary-button" th:href="@{/cart-ui}">장바구니로 이동</a>
+    </div>
+  </section>
+
+  <section class="layout" th:if="${!#lists.isEmpty(orders)}">
+    <aside class="panel">
+      <div class="panel-header">
+        <h2>주문 목록</h2>
+        <span class="badge" th:text="${orderCount}">0</span>
+      </div>
+      <div class="order-list">
+        <a th:classappend="${selectedOrder != null and selectedOrder.orderId() == order.orderId()} ? ' active'"
+           th:each="order : ${orders}"
+           th:href="@{/order-ui/{orderId}(orderId=${order.orderId()})}">
+          <div class="order-title">
+            <span th:text="|Order #${order.orderId()}|">Order #1</span>
+            <strong th:text="${#numbers.formatInteger(order.total(), 0, 'COMMA')} + '원'">0원</strong>
+          </div>
+          <div class="meta">
+            <span th:text="${order.status()}">PENDING</span>
+            <span th:text="|${order.orderLineCount()}개 강의|">0개 강의</span>
+            <span th:text="${#temporals.format(order.createdAt(), 'yyyy.MM.dd HH:mm')}">2026.05.22 10:00</span>
+          </div>
+        </a>
+      </div>
+    </aside>
+
+    <article class="panel" th:if="${selectedOrder != null}">
+      <div class="panel-header">
+        <h2 th:text="|Order #${selectedOrder.orderId()}|">Order #1</h2>
+        <span class="badge" th:text="${selectedOrder.status()}">PENDING</span>
+      </div>
+      <div class="detail-body">
+        <div class="detail-total">
+          <span>결제 금액</span>
+          <strong
+              th:text="${#numbers.formatInteger(selectedOrder.total(), 0, 'COMMA')} + '원'">0원</strong>
+        </div>
+        <div class="meta">
+          <span th:text="|주문자 Member #${selectedOrder.memberId()}|">주문자 Member #1</span>
+          <span th:text="${#temporals.format(selectedOrder.createdAt(), 'yyyy.MM.dd HH:mm')}">2026.05.22 10:00</span>
+        </div>
+
+        <div class="line-list">
+          <section class="line-item" th:each="line : ${selectedOrder.orderLines()}">
+            <div class="thumbnail">
+              <img th:alt="${line.title()}" th:if="${line.thumbnailUrl() != null}"
+                   th:src="${line.thumbnailUrl()}">
+              <span th:if="${line.thumbnailUrl() == null}"
+                    th:text="${#strings.substring(line.title(), 0, 1)}">C</span>
+            </div>
+            <div class="line-body">
+              <h3 th:text="${line.title()}">강의 제목</h3>
+              <p class="description" th:text="${line.description()}">강의 설명</p>
+              <div class="meta">
+                <span th:text="|Course #${line.courseId()}|">Course #1</span>
+                <strong class="price"
+                        th:text="${#numbers.formatInteger(line.price(), 0, 'COMMA')} + '원'">0원</strong>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </article>
+  </section>
+</main>
+</body>
+</html>
