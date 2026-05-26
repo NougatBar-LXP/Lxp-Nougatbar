@@ -41,7 +41,7 @@ public class MemberService {
         Member member = new Member(signupRequestDTO.getEmail(),
                 signupRequestDTO.getNickname(),
                 passwordEncoder.encode(signupRequestDTO.getPassword()),
-                signupRequestDTO.getRole());
+                signupRequestDTO.getName());
         Member saved = memberRepository.save(member);
         return saved.getId();
     }

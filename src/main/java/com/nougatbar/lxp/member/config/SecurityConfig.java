@@ -44,7 +44,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> {
                     // 비로그인 사용자도 접근 가능한 공개 경로, /auth/fail -> 로그인 실패 페이지 현재 없음
-                    auth.requestMatchers("/auth/login", "/auth/signup", "/").permitAll();
+                    auth.requestMatchers("/auth/login", "/auth/fail", "/members/signup", "/").permitAll();
                     // 관리자 페이지 x
                     auth.requestMatchers("/admin/**").hasAnyAuthority(MemberRole.ADMIN.getValue());
                     // 일반회원 전용 영역
@@ -60,14 +60,14 @@ public class SecurityConfig {
         }).logout(logout -> {
             logout.logoutUrl("/auth/logout");
             // JSESSION 쿠키 제거 - 브라우저에 남은 세션 식별자도 함께 정리
-            logout.deleteCookies("JSESSEIONID");
+            logout.deleteCookies("JSESSIONID");
             logout.invalidateHttpSession(true);
             logout.logoutSuccessUrl("/");
             // 세션 관리, 동일 사용자 최대 1세션, 만료시 루트로 이동
         }).sessionManagement(session -> {
             session.maximumSessions(1);
             session.invalidSessionUrl("/");
-            
+
         }).csrf(csrf -> csrf.disable());
 
         return http.build();

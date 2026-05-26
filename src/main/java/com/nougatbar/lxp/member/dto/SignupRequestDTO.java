@@ -8,17 +8,20 @@ public class SignupRequestDTO {
     private String email;
     private String password;
     private String nickname;
-    private MemberRole role;
+    private String name;
+
 
     public SignupRequestDTO() {
     }
 
-    public SignupRequestDTO(String email, String password, String nickname, MemberRole role) {
+    public SignupRequestDTO(Long id, String email, String password, String nickname, String name) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.role = role;
+        this.name = name;
     }
+
 
     public String getEmail() {
         return email;
@@ -36,7 +39,7 @@ public class SignupRequestDTO {
         return nickname;
     }
 
-    public MemberRole getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 }
