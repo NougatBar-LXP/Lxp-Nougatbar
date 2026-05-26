@@ -12,7 +12,7 @@
       <div class="d-flex align-items-center gap-2">
         <!-- 로그인 전 버튼 표시 -->
         <th:block sec:authorize="isAnonymous()">
-          <a class="btn btn-primary rounded-pill px-4 ms-auto" th:href="@{/auth/login}">로그인</a>
+          <a class="btn btn-primary rounded-pill px-4 ms-auto" th:href="@{/login}">로그인</a>
           <a class="btn btn-outline-primary rounded-pill px-4 ms-2" th:href="@{/auth/register}">회원가입</a>
         </th:block>
 
@@ -28,7 +28,7 @@
               <li><hr class="dropdown-divider"></li>
               <!-- 로그아웃은 POST 요청이 필요하므로 form으로 처리 -->
               <li>
-                <form method="post" th:action="@{/auth/logout}">
+                <form method="post" th:action="@{/logout}">
                   <button class="dropdown-item" type="submit">로그아웃</button>
                 </form>
               </li>
