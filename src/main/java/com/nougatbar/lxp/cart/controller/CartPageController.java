@@ -62,7 +62,7 @@ public class CartPageController {
     @PostMapping("/cart-ui")
     public String addCart(@RequestParam Long courseId) {
         cartService.addCart(TEMP_MEMBER_ID, courseId);
-        return "redirect:/cart-ui";
+        return "redirect:/courses/" + courseId;
     }
 
     @PostMapping("/cart-ui/delete")
