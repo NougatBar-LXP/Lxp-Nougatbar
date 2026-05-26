@@ -87,7 +87,11 @@
             <!-- 버튼 -->
             <div class="d-grid gap-2 mb-3">
               <a class="btn btn-primary" href="#">수강신청 하기</a>
-              <a class="btn btn-outline-secondary" href="#">바구니에 담기</a>
+              <form method="post" th:action="@{/cart-ui}">
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <input type="hidden" name="courseId" th:value="${course.courseId}">
+                <button type="submit" class="btn btn-outline-secondary w-100">바구니에 담기</button>
+              </form>
             </div>
 
             <!-- 코스 정보 -->
