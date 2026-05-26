@@ -70,7 +70,7 @@
           <div class="col-md-4">
             <label class="form-label fw-semibold">멤버 ID</label>
             <input class="form-control" type="text"
-                   th:value="${`#authentication` != null ? `#authentication.name` : '로그인 필요'}"
+                   th:value="${#authentication != null ? #authentication.name : '로그인 필요'}"
                    readonly>
           </div>
         </div>
