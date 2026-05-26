@@ -59,6 +59,9 @@
               <option value="MISSION"
                       th:selected="${(editMode and selectedCommunity.type().name() == 'MISSION') or (!editMode and currentType == 'MISSION')}">미션</option>
             </select>
+            <input type="hidden" name="type"
+                   th:if="${editMode}"
+                   th:value="${selectedCommunity.type().name()}">
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">코스 ID</label>
@@ -66,9 +69,9 @@
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">멤버 ID</label>
-            <input class="form-control" type="number" name="memberId" min="1"
-                   th:value="${editMode ? selectedCommunity.memberId() : 1}"
-                   th:readonly="${editMode}" required>
+            <input class="form-control" type="text"
+                   th:value="${`#authentication` != null ? `#authentication.name` : '로그인 필요'}"
+                   readonly>
           </div>
         </div>
 
