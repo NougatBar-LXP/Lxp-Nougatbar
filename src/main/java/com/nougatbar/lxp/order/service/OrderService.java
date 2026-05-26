@@ -46,7 +46,7 @@ public class OrderService {
         memberService.getMemberById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "멤버를 찾을 수 없습니다. memberId=" + memberId));
-        
+
         List<CartResponse> carts = cartService.findCartsById(memberId);
         if (carts == null || carts.isEmpty()) {
             throw new IllegalArgumentException("카트 안에 상품이 존재하지 않습니다.");
@@ -65,12 +65,11 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrderResponse getOrderById(Long memberId, Long orderId) {
         if (memberId == null || orderId == null) {
-            throw new IllegalArgumentException("memberId와 orderId 필수입니다.");
+            throw new IllegalArgumentException("memberId와 orderId는 필수입니다.");
         }
 
         Order order = orderRepository.findByMemberIdAndOrderId(memberId, orderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Order를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
         return OrderResponse.from(order, courseService);
     }
 
