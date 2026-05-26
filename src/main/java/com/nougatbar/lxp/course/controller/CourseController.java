@@ -1,47 +1,74 @@
 package com.nougatbar.lxp.course.controller;
 
-import com.nougatbar.lxp.course.dto.response.CourseDetailDTO;
-import com.nougatbar.lxp.course.dto.response.CourseSummaryDTO;
-import com.nougatbar.lxp.course.service.CourseService;
+import com.nougatbar.lxp.common.util.StaticResourceLocator;
+import com.nougatbar.lxp.course.application.CourseAppService;
+import com.nougatbar.lxp.course.dto.response.CourseDetailViewModel;
+import com.nougatbar.lxp.course.dto.response.CourseSummeryViewModel;
+import com.nougatbar.lxp.course.dto.response.SectionDetailViewModel;
+import java.util.HashMap;
 import java.util.List;
-import org.springframework.http.ResponseEntity;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Course 정보 조회 테스를 위한 REST API 컨트롤러. 강좌 목록 조회와 강좌 상세 조회 기능을 제공합니다.
- */
-@RestController
+@Controller
 @RequestMapping("/courses")
 public class CourseController {
-    private final CourseService courseService;
+    private final CourseAppService courseAppService;
+    private final StaticResourceLocator staticResourceLocator;
 
-    public CourseController(CourseService courseService) {
-        this.courseService = courseService;
+    public CourseController(CourseAppService courseAppService,
+                            StaticResourceLocator staticResourceLocator) {
+        this.courseAppService = courseAppService;
+        this.staticResourceLocator = staticResourceLocator;
     }
 
     /**
-     * 모든 강좌의 요약 정보를 조회하는 API 엔드포인트.
+     * 모든 강좌의 요약 정보를 조회하여 강좌 목록 페이지를 렌더링하는 엔드포인트.
      *
-     * @return 강좌 요약 정보 리스트를 포함한 HTTP 응답
+     * @param model 뷰 모델 객체, 강좌 요약 데이터를 담아 뷰로 전달하는 데 사용
+     * @return 강좌 목록 페이지를 렌더링한 뷰 이름
      */
     @GetMapping
-    public ResponseEntity<List<CourseSummaryDTO>> listCourses() {
-        return ResponseEntity.ok(courseService.listAllCourses());
+    public String courses(Model model) {
+        List<CourseSummeryViewModel> courseSummaries = courseAppService.listCourseSummaries();
+
+        Map<Long, String> thumbnailUrlMap = courseSummaries.stream()
+                .collect(Collectors.toMap(CourseSummeryViewModel::courseId,
+                        course -> staticResourceLocator.locate(course.courseThumbnailUri())));
+
+        model.addAttribute("courses", courseSummaries);
+        model.addAttribute("thumbnailUrlMap", thumbnailUrlMap);
+
+        return "courses/index";
     }
 
-    /**
-     * 특정 강좌의 상세 정보를 조회하는 API 엔드포인트.
-     *
-     * @param courseId 조회할 강좌의 ID
-     * @return 강좌 상세 정보를 포함한 HTTP 응답, 강좌가 존재하지 않을 경우 404 Not Found
-     */
     @GetMapping("/{courseId}")
-    public ResponseEntity<CourseDetailDTO> getCourseDetail(@PathVariable Long courseId) {
-        return courseService.getCourseDetailById(courseId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public String courseDetail(Model model, @PathVariable Long courseId) {
+        CourseDetailViewModel courseDetail = courseAppService.getCourseDetail(courseId);
+
+        String thumbnailUrl = staticResourceLocator.locate(courseDetail.courseThumbnailUri());
+
+        Map<Long, String> lectureContentUrlMap = new HashMap<>();
+        for (SectionDetailViewModel section : courseDetail.courseSections()) {
+            if (section == null) {
+                continue;
+            }
+
+            section.lectures().forEach(lecture -> {
+                String contentUrl = staticResourceLocator.locate(lecture.contentUri());
+                lectureContentUrlMap.put(lecture.lectureId(), contentUrl);
+            });
+        }
+
+        model.addAttribute("course", courseDetail);
+        model.addAttribute("thumbnailUrl", thumbnailUrl);
+        model.addAttribute("lectureContentUrlMap", lectureContentUrlMap);
+
+        return "courses/detail";
     }
 }

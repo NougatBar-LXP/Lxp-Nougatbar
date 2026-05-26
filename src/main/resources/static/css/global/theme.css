@@ -1,0 +1,59 @@
+/* ==============================================================
+   Lxp Nougatbar – 공용 테마 컬러셋
+   Bootstrap CDN 로드 후 이 파일을 불러와야 오버라이드가 적용됩니다.
+   ============================================================== */
+
+/* ── 1. CSS 변수 재정의 ─────────────────────────────────────── */
+:root {
+  --bs-primary:               #630ED4;
+  --bs-primary-rgb:           99, 14, 212;
+  --bs-primary-text-emphasis: #3c0b82;
+  --bs-primary-bg-subtle:     #efe4ff;
+  --bs-primary-border-subtle: #d8c0ff;
+  --bs-link-color:            #630ED4;
+  --bs-link-color-rgb:        99, 14, 212;
+}
+
+/* ── 2. btn-primary ─────────────────────────────────────────── */
+/* Bootstrap 5는 일부 btn 색상을 변수만으로 교체할 수 없어 직접 지정합니다. */
+.btn-primary {
+  background-color: #630ED4;
+  border-color:     #630ED4;
+  color:            #fff;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:first-child:active,
+.btn-check:checked + .btn-primary {
+  background-color: #4e0baa;
+  border-color:     #4e0baa;
+  color:            #fff;
+}
+.btn-primary:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(99, 14, 212, 0.5);
+}
+
+/* ── 3. btn-outline-primary ─────────────────────────────────── */
+.btn-outline-primary {
+  color:        #630ED4;
+  border-color: #630ED4;
+}
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active,
+.btn-outline-primary:first-child:active,
+.btn-check:checked + .btn-outline-primary {
+  background-color: #630ED4;
+  border-color:     #630ED4;
+  color:            #fff;
+}
+.btn-outline-primary:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(99, 14, 212, 0.5);
+}
+
+/* ── 4. 텍스트 / 배지 / 배경 유틸리티 ─────────────────────── */
+.text-primary                { color: #630ED4 !important; }
+.badge.text-bg-primary       { background-color: #630ED4 !important; color: #fff !important; }
+.bg-primary-subtle           { background-color: #efe4ff !important; }
+.border-primary-subtle       { border-color:     #d8c0ff !important; }
