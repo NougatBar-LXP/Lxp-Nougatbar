@@ -37,6 +37,7 @@ public class Enrollment {
     private Enrollment(Long memberId, Long courseId) {
         this.memberId = Objects.requireNonNull(memberId, "memberId is required.");
         this.courseId = Objects.requireNonNull(courseId, "courseId is required.");
+        this.status = EnrollmentStatus.Uncompleted;
     }
 
     public static Enrollment create(Long memberId, Long courseId) {
@@ -66,6 +67,9 @@ public class Enrollment {
 
     @PrePersist
     void prePersist() {
+        if (this.status == null) {
+            this.status = EnrollmentStatus.Uncompleted;
+        }
         this.createdAt = LocalDateTime.now();
     }
 }

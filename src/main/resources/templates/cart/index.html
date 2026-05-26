@@ -2,527 +2,404 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
   <title>LXP Cart</title>
+
+  <link crossorigin="anonymous"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/global/theme.css}">
+  <link rel="stylesheet" th:href="@{/css/global/header.css}">
+
   <style>
     :root {
-      --bg: #f7f8fa;
-      --panel: #ffffff;
-      --text: #1f2933;
-      --muted: #6b7280;
-      --line: #e5e7eb;
-      --green: #00c471;
-      --green-dark: #00a85f;
-    }
-
-    * {
-      box-sizing: border-box;
+      --cart-bg: #f7f7fc;
+      --cart-panel: #ffffff;
+      --cart-border: #e2e4f0;
+      --cart-text: #1f2937;
+      --cart-muted: #6b7280;
+      --cart-primary: #6423d6;
+      --cart-primary-dark: #4f16bb;
+      --cart-danger: #b64a45;
     }
 
     body {
-      min-width: 320px;
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Pretendard", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--cart-bg);
+      color: var(--cart-text);
     }
 
-    button {
-      font: inherit;
+    main {
+      flex: 1;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    h1,
-    h2,
-    p {
-      margin-top: 0;
-    }
-
-    .site-header {
-      border-bottom: 1px solid var(--line);
-      background: #fff;
-    }
-
-    .header-inner,
-    .page {
-      width: min(1080px, calc(100% - 40px));
+    .cart-shell {
+      max-width: 1120px;
       margin: 0 auto;
+      padding: 34px 18px 56px;
     }
 
-    .header-inner {
-      display: flex;
-      min-height: 64px;
-      align-items: center;
-      justify-content: space-between;
+    .cart-title {
+      margin-bottom: 28px;
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .cart-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 276px;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .section-title {
+      margin-bottom: 18px;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .selected-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .course-row {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr) auto;
       gap: 18px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 900;
-    }
-
-    .brand-mark {
-      display: grid;
-      width: 34px;
-      height: 34px;
-      place-items: center;
+      min-height: 132px;
+      align-items: start;
+      border: 1px solid var(--cart-border);
       border-radius: 8px;
-      background: var(--green);
-      color: #fff;
+      padding: 18px;
+      background: var(--cart-panel);
     }
 
-    .member-chip {
-      display: inline-flex;
-      min-height: 34px;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 0 12px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 800;
+    .course-thumb {
+      width: 120px;
+      height: 76px;
+      border-radius: 5px;
+      object-fit: cover;
+      background: #eef0f6;
     }
 
-    .page {
-      display: grid;
-      gap: 34px;
-      padding: 34px 0 70px;
+    .course-body {
+      min-width: 0;
     }
 
-    .summary {
+    .course-title {
+      margin: 1px 0 10px;
+      overflow: hidden;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.35;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .course-meta {
+      margin: 0;
+      color: var(--cart-muted);
+      font-size: 13px;
+    }
+
+    .course-side {
       display: flex;
+      min-width: 124px;
+      flex-direction: column;
       align-items: end;
       justify-content: space-between;
-      gap: 20px;
+      align-self: stretch;
     }
 
-    .summary h1 {
-      margin-bottom: 10px;
-      font-size: 32px;
-      line-height: 1.25;
-      letter-spacing: 0;
-    }
-
-    .summary h2 {
-      margin-bottom: 0;
-      color: var(--green-dark);
-      font-size: 22px;
-      line-height: 1.35;
-      letter-spacing: 0;
-    }
-
-    .section-heading {
-      margin-bottom: 14px;
-      font-size: 24px;
-      line-height: 1.32;
-    }
-
-    .course-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .course-card,
-    .cart-item,
-    .empty {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-
-    .course-card {
-      display: grid;
-      grid-template-columns: 132px minmax(0, 1fr);
-      overflow: hidden;
-    }
-
-    .thumbnail {
-      position: relative;
-      display: grid;
-      min-height: 132px;
-      place-items: center;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(0, 196, 113, 0.95), rgba(37, 99, 235, 0.92));
-      color: #fff;
-      font-size: 26px;
-      font-weight: 900;
-    }
-
-    .thumbnail img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .course-body,
-    .item-body {
-      min-width: 0;
-      padding: 18px;
-    }
-
-    .course-body h2,
-    .item-body h2 {
-      margin-bottom: 8px;
-      font-size: 21px;
-      line-height: 1.35;
-    }
-
-    .description {
-      display: -webkit-box;
-      overflow: hidden;
-      margin-bottom: 14px;
-      color: #4b5563;
-      line-height: 1.55;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-    }
-
-    .meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 14px;
+    .remove-button {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
       align-items: center;
-      color: var(--muted);
-      font-size: 14px;
+      justify-content: center;
+      border: 0;
+      background: transparent;
+      color: #35394a;
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .course-price {
+      color: var(--cart-primary);
+      font-size: 20px;
       font-weight: 700;
     }
 
-    .price {
-      color: var(--text);
-      font-size: 18px;
-      font-weight: 900;
-    }
-
-    .course-actions,
-    .item-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 16px;
-    }
-
-    .primary-button,
-    .secondary-button,
-    .danger-button,
-    .done-button {
-      display: inline-flex;
-      min-height: 40px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-      padding: 0 16px;
-      cursor: pointer;
-      font-weight: 900;
-    }
-
-    .primary-button {
-      border: 0;
-      background: var(--green);
-      color: #fff;
-    }
-
-    .primary-button:hover {
-      background: var(--green-dark);
-    }
-
-    .secondary-button {
-      border: 1px solid var(--line);
-      background: #fff;
-      color: var(--text);
-    }
-
-    .danger-button {
-      border: 1px solid #fecdd3;
-      background: #fff1f2;
-      color: #be123c;
-    }
-
-    .done-button {
-      border: 0;
-      background: #eef2f7;
-      color: var(--muted);
-      cursor: default;
-    }
-
-    .cart-header {
-      position: sticky;
-      top: var(--cart-sticky-top, 12px);
-      z-index: 5;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin: -10px -10px 14px;
-      border: 1px solid rgba(229, 231, 235, 0.9);
+    .empty-state {
+      border: 1px solid var(--cart-border);
       border-radius: 8px;
-      padding: 10px;
-      background: rgba(247, 248, 250, 0.94);
-      backdrop-filter: blur(10px);
+      padding: 34px;
+      background: var(--cart-panel);
+      color: var(--cart-muted);
     }
 
-    .cart-header .section-heading {
-      margin-bottom: 0;
+    .divider {
+      margin: 48px 0;
+      border-color: var(--cart-border);
+      opacity: 1;
     }
 
-    .cart-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
+    .payment-options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 142px));
+      gap: 12px;
     }
 
-    .cart-total {
-      display: inline-flex;
-      min-height: 40px;
-      align-items: center;
-      gap: 10px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      padding: 0 14px;
+    .pay-option {
+      position: relative;
+      min-height: 76px;
+      border: 1px solid #d6d9e6;
+      border-radius: 8px;
       background: #fff;
-    }
-
-    .cart-total span {
-      color: var(--muted);
+      color: #4b5563;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 500;
     }
 
-    .cart-total strong {
-      color: var(--text);
+    .pay-option.active {
+      border: 2px solid var(--cart-primary);
+      color: var(--cart-primary);
+    }
+
+    .pay-option.active::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-top: 18px solid var(--cart-primary);
+      border-left: 18px solid transparent;
+      border-top-right-radius: 6px;
+    }
+
+    .summary-card {
+      position: sticky;
+      top: 92px;
+      border: 1px solid var(--cart-border);
+      border-radius: 8px;
+      padding: 30px;
+      background: var(--cart-panel);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
+    }
+
+    .summary-title {
+      margin-bottom: 30px;
       font-size: 18px;
-      font-weight: 900;
+      font-weight: 500;
     }
 
-    .cart-list {
-      display: grid;
-      gap: 14px;
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      color: #5f6678;
+      font-size: 13px;
     }
 
-    .cart-item {
-      display: grid;
-      grid-template-columns: 168px minmax(0, 1fr);
-      overflow: hidden;
+    .summary-line strong {
+      color: #35394a;
+      font-weight: 500;
     }
 
-    .empty {
-      display: grid;
-      min-height: 220px;
-      place-items: center;
-      text-align: center;
+    .summary-line.discount strong {
+      color: var(--cart-danger);
     }
 
-    .empty h2 {
-      margin-bottom: 8px;
-      font-size: 22px;
+    .summary-divider {
+      margin: 32px 0 24px;
+      border-color: var(--cart-border);
+      opacity: 1;
     }
 
-    .empty p {
-      margin-bottom: 0;
-      color: var(--muted);
+    .final-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+
+    .final-price {
+      color: var(--cart-primary);
+      font-size: 29px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .checkout-button {
+      width: 100%;
+      min-height: 52px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--cart-primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .checkout-button:hover {
+      background: var(--cart-primary-dark);
+    }
+
+    .policy-box {
+      margin-top: 18px;
+      border-radius: 6px;
+      padding: 14px;
+      background: #f0f1f8;
+      color: #697083;
+      font-size: 11px;
+      line-height: 1.55;
     }
 
     @media (max-width: 900px) {
-      .course-grid {
+      .cart-layout {
         grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .summary-card {
+        position: static;
       }
     }
 
-    @media (max-width: 720px) {
-      .header-inner,
-      .page {
-        width: min(100% - 28px, 1080px);
+    @media (max-width: 640px) {
+      .cart-shell {
+        padding-inline: 14px;
       }
 
-      .summary,
-      .cart-header {
-        align-items: start;
-        flex-direction: column;
+      .course-row {
+        grid-template-columns: 92px minmax(0, 1fr);
       }
 
-      .cart-actions {
-        display: grid;
-        width: 100%;
+      .course-thumb {
+        width: 92px;
+        height: 64px;
       }
 
-      .cart-total {
-        justify-content: space-between;
-        width: 100%;
+      .course-side {
+        grid-column: 1 / -1;
+        min-width: 0;
+        flex-direction: row;
+        align-items: center;
       }
 
-      .cart-actions form,
-      .cart-actions button {
-        width: 100%;
-      }
-
-      .course-card,
-      .cart-item {
+      .payment-options {
         grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-<header class="site-header">
-  <div class="header-inner">
-    <a class="brand" th:href="@{/cart-ui}">
-      <span class="brand-mark">L</span>
-      <span>LXP Cart</span>
-    </a>
-    <span class="member-chip" th:text="|Member #${memberId}|">Member #1</span>
-  </div>
-</header>
+<div th:replace="~{fragments/header::header}"></div>
 
-<main class="page">
-  <section class="summary">
-    <div>
-      <h1>강의 목록</h1>
-      <h2 th:text="${courseMessage}">담긴 강의 0개</h2>
-    </div>
-  </section>
+<main>
+  <div class="cart-shell">
+    <h1 class="cart-title">장바구니</h1>
 
-  <section>
-    <h2 class="section-heading">수강 가능한 강의</h2>
-    <div class="course-grid">
-      <article class="course-card" th:each="course : ${courses}">
-        <div class="thumbnail">
-          <img th:alt="${course.title()}" th:if="${course.thumbnailUri() != null}"
-               th:src="${course.thumbnailUri()}">
-          <span th:if="${course.thumbnailUri() == null}"
-                th:text="${#strings.substring(course.title(), 0, 1)}">C</span>
+    <div class="cart-layout">
+      <section>
+        <h2 class="section-title">선택한 강좌</h2>
+
+        <div class="selected-list" th:if="${!#lists.isEmpty(carts)}">
+          <article class="course-row" th:each="cart : ${carts}">
+            <img alt="강의 썸네일"
+                 class="course-thumb"
+                 th:alt="${cart.title}"
+                 th:attr="onerror=|this.onerror=null;this.src='@{/images/nougatbar.png}';|"
+                 th:src="${cart.thumbnailUrl != null ? cart.thumbnailUrl : '/images/nougatbar.png'}">
+
+            <div class="course-body">
+              <h3 class="course-title" th:text="${cart.title}">강좌명</h3>
+              <p class="course-meta">
+                <span th:if="${cart.member != null}" th:text="|강사: ${cart.member.nickname}|">강사: Nougat</span>
+                <span th:if="${cart.member == null}">강사: Nougat</span>
+                <span> · 온라인 강의</span>
+              </p>
+            </div>
+
+            <div class="course-side">
+              <form method="post" th:action="@{/cart-ui/delete}">
+                <input th:if="${_csrf != null}" th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}"
+                       type="hidden">
+                <input name="courseId" th:value="${cart.courseId}" type="hidden">
+                <button aria-label="삭제" class="remove-button" type="submit">&times;</button>
+              </form>
+              <strong class="course-price"
+                      th:text="'₩ ' + ${#numbers.formatInteger(cart.price, 0, 'COMMA')}">₩
+                0</strong>
+            </div>
+          </article>
         </div>
-    </section>
 
-    <section>
-        <h2 class="section-heading">수강 가능한 강의</h2>
-        <div class="course-grid">
-            <article class="course-card" th:each="course : ${courses}">
-                <div class="thumbnail">
-                    <!-- carts 페이지가 아닌 courses 페이지에서 course를 선택하고 carts 페이지는 장바구니 내용만 보이도록 수정이 필요함 -->
-                    <!-- 따라서 thumbnailUri 사용은 임시적으로 허용함 (페이지를 재정립하며 수정 예정) -->
-                    <img th:if="${course.thumbnailUri() != null}" th:src="${course.thumbnailUri()}" th:alt="${course.title()}">
-                    <span th:if="${course.thumbnailUri() == null}" th:text="${#strings.substring(course.title(), 0, 1)}">C</span>
-                </div>
-                <div class="course-body">
-                    <h2 th:text="${course.title()}">강의 제목</h2>
-                    <p class="description" th:text="${course.description()}">강의 설명</p>
-                    <div class="meta">
-                        <span th:text="|Course #${course.courseId()}|">Course #1</span>
-                        <span th:text="${course.level()}">EASY</span>
-                        <strong class="price" th:text="${#numbers.formatInteger(course.price(), 0, 'COMMA')} + '원'">30,000원</strong>
-                    </div>
-                    <div class="course-actions">
-                        <form th:if="${!cartCourseIds.contains(course.courseId())}" th:action="@{/cart-ui}" method="post">
-                            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                            <input type="hidden" name="courseId" th:value="${course.courseId()}">
-                            <button class="primary-button" type="submit">장바구니 담기</button>
-                        </form>
-                        <button class="done-button" type="button" th:if="${cartCourseIds.contains(course.courseId())}" disabled>담김</button>
-                    </div>
-                </div>
-            </article>
+        <div class="empty-state" th:if="${#lists.isEmpty(carts)}">
+          장바구니에 담긴 강의가 없습니다.
+          <a class="ms-1" th:href="@{/courses}">강의 목록으로 이동</a>
         </div>
-      </article>
-    </div>
-  </section>
 
-  <section>
-    <div class="cart-header">
-      <h2 class="section-heading">내 장바구니</h2>
-      <div class="cart-actions" th:if="${!#lists.isEmpty(carts)}">
-        <div class="cart-total" data-cart-total>
-          <span>전체 금액</span>
-          <strong th:text="${#numbers.formatInteger(totalPrice, 0, 'COMMA')} + '원'">0원</strong>
+        <hr class="divider">
+
+        <section>
+          <h2 class="section-title">결제 수단</h2>
+          <div class="payment-options">
+            <button class="pay-option active" type="button">신용카드</button>
+            <button class="pay-option" type="button">계좌이체</button>
+            <button class="pay-option" type="button">간편결제</button>
+          </div>
+        </section>
+      </section>
+
+      <aside class="summary-card">
+        <h2 class="summary-title">결제 상세</h2>
+
+        <div class="summary-line">
+          <span>총 상품 금액</span>
+          <strong th:text="'₩ ' + ${#numbers.formatInteger(totalPrice, 0, 'COMMA')}">₩ 0</strong>
         </div>
+        <div class="summary-line discount">
+          <span>할인 금액</span>
+          <strong>- ₩ 0</strong>
+        </div>
+
+        <hr class="summary-divider">
+
+        <div class="final-line">
+          <span>최종 결제 금액</span>
+          <strong class="final-price"
+                  th:text="'₩' + ${#numbers.formatInteger(totalPrice, 0, 'COMMA')}">₩0</strong>
+        </div>
+
         <form method="post" th:action="@{/order-ui}">
           <input th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"
                  type="hidden">
-          <button class="primary-button" type="submit">주문하기</button>
+          <button class="checkout-button" th:disabled="${#lists.isEmpty(carts)}" type="submit">
+            결제하기
+          </button>
         </form>
-        <form method="post" th:action="@{/cart-ui/delete-all}">
-          <input th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"
-                 type="hidden">
-          <button class="danger-button" type="submit">전체 삭제하기</button>
-        </form>
-      </div>
-    </div>
 
-    <div class="cart-list" th:if="${!#lists.isEmpty(carts)}">
-      <article class="cart-item" th:each="cart : ${carts}">
-        <div class="thumbnail">
-          <img th:alt="${cart.title}" th:if="${cart.thumbnailUri != null}"
-               th:src="${cart.thumbnailUri}">
-          <span th:if="${cart.thumbnailUri == null}"
-                th:text="${#strings.substring(cart.title, 0, 1)}">C</span>
+        <div class="policy-box">
+          가격 스냅샷 정책: 장바구니에 담긴 상품의 가격은 결제 시점의 가격 기준으로 적용되며,
+          할인 시점과 다를 수 있습니다.
         </div>
-        <div class="item-body">
-          <h2 th:text="${cart.title}">강의 제목</h2>
-          <p class="description" th:text="${cart.description}">강의 설명</p>
-          <div class="meta">
-            <span th:text="|Course #${cart.courseId}|">Course #1</span>
-            <span th:if="${cart.member != null}" th:text="|수강생 ${cart.member.nickname}|">수강생 nickname</span>
-            <strong class="price" th:text="${#numbers.formatInteger(cart.price, 0, 'COMMA')} + '원'">30,000원</strong>
-          </div>
-          <div class="item-actions">
-            <form method="post" th:action="@{/cart-ui/delete}">
-              <input th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"
-                     type="hidden">
-              <input name="courseId" th:value="${cart.courseId}" type="hidden">
-              <button class="secondary-button" type="submit">삭제</button>
-            </form>
-          </div>
-        </div>
-      </article>
+      </aside>
     </div>
-
-    <div class="empty" th:if="${#lists.isEmpty(carts)}">
-      <div>
-        <h2>장바구니에 담긴 강의가 없습니다.</h2>
-        <p>위 강의 목록에서 원하는 강의를 장바구니에 담아보세요.</p>
-      </div>
-    </div>
-  </section>
+  </div>
 </main>
-<script>
-  const cartScrollKey = "lxp.cart.scrollY";
-  const header = document.querySelector(".site-header");
-  const cartHeader = document.querySelector(".cart-header");
 
-  const savedScrollY = sessionStorage.getItem(cartScrollKey);
-  if (savedScrollY !== null) {
-    requestAnimationFrame(() => {
-      window.scrollTo(0, Number(savedScrollY));
-      sessionStorage.removeItem(cartScrollKey);
-    });
-  }
+<div th:replace="~{fragments/footer::footer}"></div>
 
-  document.querySelectorAll("form").forEach((form) => {
-    form.addEventListener("submit", () => {
-      sessionStorage.setItem(cartScrollKey, String(window.scrollY));
-    });
-  });
-
-  function updateCartStickyTop() {
-    if (!cartHeader) {
-      return;
-    }
-
-    const headerHeight = header ? header.getBoundingClientRect().height : 0;
-    document.documentElement.style.setProperty("--cart-sticky-top", `${headerHeight + 12}px`);
-  }
-
-  updateCartStickyTop();
-  window.addEventListener("resize", updateCartStickyTop);
-</script>
+<script crossorigin="anonymous"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
