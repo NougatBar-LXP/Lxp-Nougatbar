@@ -29,6 +29,9 @@ public class SecurityConfig {
             // root
             authorize.requestMatchers("/").permitAll();
 
+            // static resources (test URL policy)
+            authorize.requestMatchers("/static/**").permitAll();
+
             // member
             authorize.requestMatchers("/login", "/logout", "/error").permitAll();
 
