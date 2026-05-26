@@ -12,17 +12,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nougatbar.lxp.community.application.CommunityAppService;
 import com.nougatbar.lxp.community.dto.request.CommunityCreateRequest;
 import com.nougatbar.lxp.community.dto.request.CommunityUpdateRequest;
 import com.nougatbar.lxp.community.dto.response.CommunityResponse;
 import com.nougatbar.lxp.community.entity.CommunityType;
-import com.nougatbar.lxp.community.service.CommunityService;
+import com.nougatbar.lxp.member.service.MemberService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +42,10 @@ class CommunityControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private CommunityService communityService;
+    private CommunityAppService communityAppService;
+
+    @MockitoBean
+    private MemberService memberService;
 
     @Test
     void createCommunity_success() throws Exception {
@@ -67,8 +72,8 @@ class CommunityControllerTest {
     @Test
     void findCommunities_success() throws Exception {
         // given
-        communityService.createCommunity(createRequest(1L, 1L, CommunityType.COURSE, "first title", "first content"));
-        communityService.createCommunity(createRequest(2L, 1L, CommunityType.MISSION, "second title", "second content"));
+        communityAppService.createCommunity(createRequest(1L, 1L, CommunityType.COURSE, "first title", "first content"));
+        communityAppService.createCommunity(createRequest(2L, 1L, CommunityType.MISSION, "second title", "second content"));
 
         // when
         ResultActions result = mockMvc.perform(get("/community"));
@@ -83,8 +88,8 @@ class CommunityControllerTest {
     @Test
     void findCommunitiesByCourseId_success() throws Exception {
         // given
-        communityService.createCommunity(createRequest(1L, 1L, CommunityType.COURSE, "course 1 title", "content"));
-        communityService.createCommunity(createRequest(2L, 1L, CommunityType.COURSE, "course 2 title", "content"));
+        communityAppService.createCommunity(createRequest(1L, 1L, CommunityType.COURSE, "course 1 title", "content"));
+        communityAppService.createCommunity(createRequest(2L, 1L, CommunityType.COURSE, "course 2 title", "content"));
 
         // when
         ResultActions result = mockMvc.perform(get("/community")
@@ -100,7 +105,7 @@ class CommunityControllerTest {
     @Test
     void findCommunity_success() throws Exception {
         // given
-        CommunityResponse created = communityService.createCommunity(
+        CommunityResponse created = communityAppService.createCommunity(
                 createRequest(1L, 1L, CommunityType.LECTURE, "lecture question", "question content")
         );
 
@@ -117,7 +122,7 @@ class CommunityControllerTest {
     @Test
     void updateCommunity_success() throws Exception {
         // given
-        CommunityResponse created = communityService.createCommunity(
+        CommunityResponse created = communityAppService.createCommunity(
                 createRequest(1L, 1L, CommunityType.COURSE, "before title", "before content")
         );
         CommunityUpdateRequest request = new CommunityUpdateRequest("after title", "after content");
@@ -139,7 +144,7 @@ class CommunityControllerTest {
     @Test
     void deleteCommunity_success() throws Exception {
         // given
-        CommunityResponse created = communityService.createCommunity(
+        CommunityResponse created = communityAppService.createCommunity(
                 createRequest(1L, 1L, CommunityType.COURSE, "delete title", "delete content")
         );
 

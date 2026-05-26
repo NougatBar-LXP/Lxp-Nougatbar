@@ -2,141 +2,70 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>LXP Orders</title>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <title>ConnectLearn - 주문 내역</title>
+
+  <link crossorigin="anonymous"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/global/theme.css}">
+  <link rel="stylesheet" th:href="@{/css/global/header.css}">
+
   <style>
     :root {
-      --bg: #f7f8fa;
+      --page-bg: #f8f8ff;
       --panel: #ffffff;
-      --text: #1f2933;
-      --muted: #6b7280;
-      --line: #e5e7eb;
-      --green: #00c471;
-      --green-dark: #00a85f;
-      --blue: #2563eb;
-    }
-
-    * {
-      box-sizing: border-box;
+      --line: #dfe3f0;
+      --text: #1f2430;
+      --muted: #687083;
+      --primary: #6423d6;
+      --primary-soft: #f0e9ff;
     }
 
     body {
-      min-width: 320px;
-      margin: 0;
-      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--page-bg);
       color: var(--text);
-      font-family: "Pretendard", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    main {
+      flex: 1;
     }
 
-    h1,
-    h2,
-    h3,
-    p {
-      margin-top: 0;
-    }
-
-    .site-header {
-      border-bottom: 1px solid var(--line);
-      background: #fff;
-    }
-
-    .header-inner,
-    .page {
-      width: min(1080px, calc(100% - 40px));
+    .order-shell {
+      max-width: 1120px;
       margin: 0 auto;
+      padding: 42px 18px 72px;
     }
 
-    .header-inner {
-      display: flex;
-      min-height: 64px;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand,
-    .nav {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand {
-      font-size: 20px;
-      font-weight: 900;
-    }
-
-    .brand-mark {
-      display: grid;
-      width: 34px;
-      height: 34px;
-      place-items: center;
-      border-radius: 8px;
-      background: var(--green);
-      color: #fff;
-    }
-
-    .nav a,
-    .member-chip {
-      display: inline-flex;
-      min-height: 34px;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      padding: 0 12px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .page {
-      display: grid;
-      gap: 26px;
-      padding: 34px 0 70px;
-    }
-
-    .summary {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .summary h1 {
+    .page-title {
       margin-bottom: 10px;
-      font-size: 32px;
-      line-height: 1.25;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 0;
     }
 
-    .summary p {
-      margin-bottom: 0;
+    .page-subtitle {
+      margin-bottom: 36px;
       color: var(--muted);
-      font-weight: 700;
+      font-size: 16px;
     }
 
-    .layout {
+    .order-layout {
       display: grid;
-      grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
-      gap: 18px;
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: 24px;
       align-items: start;
     }
 
-    .panel,
-    .empty,
-    .order-list a,
-    .line-item {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-    }
-
     .panel {
-      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      box-shadow: 0 12px 26px rgba(31, 36, 48, 0.04);
     }
 
     .panel-header {
@@ -145,25 +74,23 @@
       justify-content: space-between;
       gap: 12px;
       border-bottom: 1px solid var(--line);
-      padding: 16px 18px;
+      padding: 18px 20px;
     }
 
-    .panel-header h2 {
-      margin-bottom: 0;
-      font-size: 20px;
-      line-height: 1.35;
+    .panel-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
     }
 
-    .badge {
-      display: inline-flex;
-      min-height: 28px;
-      align-items: center;
-      border-radius: 4px;
-      padding: 0 10px;
-      background: #ecfdf5;
-      color: var(--green-dark);
-      font-size: 13px;
-      font-weight: 900;
+    .count-pill,
+    .status-pill {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
     }
 
     .order-list {
@@ -172,260 +99,229 @@
       padding: 14px;
     }
 
-    .order-list a {
+    .order-link {
       display: grid;
       gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
       padding: 14px;
+      color: inherit;
+      text-decoration: none;
+      background: #fff;
     }
 
-    .order-list a.active {
-      border-color: var(--green);
-      box-shadow: inset 4px 0 0 var(--green);
+    .order-link.active {
+      border-color: var(--primary);
+      box-shadow: inset 4px 0 0 var(--primary);
     }
 
-    .order-title,
-    .detail-total {
+    .order-link-title {
       display: flex;
-      align-items: center;
       justify-content: space-between;
       gap: 12px;
-      font-weight: 900;
+      font-weight: 800;
     }
 
-    .meta {
+    .order-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 8px 12px;
       color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 600;
     }
 
     .detail-body {
       display: grid;
-      gap: 14px;
-      padding: 18px;
+      gap: 18px;
+      padding: 20px;
     }
 
     .detail-total {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
       border-bottom: 1px solid var(--line);
-      padding-bottom: 16px;
-      font-size: 18px;
+      padding-bottom: 18px;
     }
 
-    .detail-total strong,
-    .price {
-      color: var(--text);
-      font-size: 20px;
-      font-weight: 900;
+    .detail-total span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .detail-total strong {
+      color: var(--primary);
+      font-size: 28px;
+      font-weight: 500;
     }
 
     .line-list {
       display: grid;
-      gap: 12px;
+      gap: 14px;
     }
 
     .line-item {
       display: grid;
-      grid-template-columns: 116px minmax(0, 1fr);
-      overflow: hidden;
-    }
-
-    .thumbnail {
-      position: relative;
-      display: grid;
-      min-height: 116px;
-      place-items: center;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(0, 196, 113, 0.95), rgba(37, 99, 235, 0.92));
-      color: #fff;
-      font-size: 24px;
-      font-weight: 900;
-    }
-
-    .thumbnail img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .line-body {
-      min-width: 0;
+      grid-template-columns: 132px minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
       padding: 16px;
+      background: #fff;
     }
 
-    .line-body h3 {
-      margin-bottom: 8px;
-      font-size: 19px;
-      line-height: 1.35;
+    .line-thumb {
+      width: 132px;
+      height: 82px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #eef0f6;
     }
 
-    .description {
+    .line-title {
+      margin: 0 0 8px;
+      overflow: hidden;
+      font-size: 18px;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .line-description {
       display: -webkit-box;
       overflow: hidden;
-      margin-bottom: 12px;
-      color: #4b5563;
-      line-height: 1.55;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
     }
 
-    .empty {
-      display: grid;
-      min-height: 260px;
-      place-items: center;
-      padding: 28px;
-      text-align: center;
+    .line-price {
+      color: var(--primary);
+      font-size: 18px;
+      font-weight: 800;
+      white-space: nowrap;
     }
 
-    .empty h2 {
-      margin-bottom: 8px;
-      font-size: 22px;
-    }
-
-    .empty p {
-      margin-bottom: 18px;
+    .empty-state {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 34px;
+      background: #fff;
       color: var(--muted);
     }
 
-    .primary-button {
-      display: inline-flex;
-      min-height: 40px;
-      align-items: center;
-      justify-content: center;
-      border: 0;
-      border-radius: 4px;
-      padding: 0 16px;
-      background: var(--green);
-      color: #fff;
-      cursor: pointer;
-      font: inherit;
-      font-weight: 900;
-    }
-
-    .primary-button:hover {
-      background: var(--green-dark);
-    }
-
-    @media (max-width: 820px) {
-      .header-inner,
-      .page {
-        width: min(100% - 28px, 1080px);
-      }
-
-      .header-inner,
-      .summary {
-        align-items: start;
-        flex-direction: column;
-      }
-
-      .layout {
+    @media (max-width: 900px) {
+      .order-layout {
         grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 640px) {
       .line-item {
-        grid-template-columns: 1fr;
+        grid-template-columns: 92px minmax(0, 1fr);
+      }
+
+      .line-thumb {
+        width: 92px;
+        height: 64px;
+      }
+
+      .line-price {
+        grid-column: 1 / -1;
       }
     }
   </style>
 </head>
 <body>
-<header class="site-header">
-  <div class="header-inner">
-    <a class="brand" th:href="@{/order-ui}">
-      <span class="brand-mark">L</span>
-      <span>LXP Orders</span>
-    </a>
-    <nav class="nav">
-      <a th:href="@{/cart-ui}">Cart</a>
-      <a th:href="@{/enrollment-ui}">Enrollment</a>
-      <span class="member-chip" th:text="|Member #${memberId}|">Member #1</span>
-    </nav>
-  </div>
-</header>
+<div th:replace="~{fragments/header::header}"></div>
 
-<main class="page">
-  <section class="summary">
-    <div>
-      <h1>주문 내역</h1>
-      <p th:text="|총 ${orderCount}건의 주문이 있습니다.|">총 0건의 주문이 있습니다.</p>
-    </div>
+<main>
+  <div class="order-shell">
+    <h1 class="page-title">주문 내역</h1>
+    <p class="page-subtitle" th:text="|총 ${orderCount}건의 주문 내역이 있습니다.|">총 0건의 주문 내역이 있습니다.</p>
 
-  </section>
+    <section class="empty-state" th:if="${#lists.isEmpty(orders)}">
+      아직 주문 내역이 없습니다.
+      <a class="ms-1" th:href="@{/cart-ui}">장바구니로 이동</a>
+    </section>
 
-  <section class="empty" th:if="${#lists.isEmpty(orders)}">
-    <div>
-      <h2>아직 주문 내역이 없습니다.</h2>
-      <p>장바구니에서 강의를 담은 뒤 주문을 생성해보세요.</p>
-      <a class="primary-button" th:href="@{/cart-ui}">장바구니로 이동</a>
-    </div>
-  </section>
-
-  <section class="layout" th:if="${!#lists.isEmpty(orders)}">
-    <aside class="panel">
-      <div class="panel-header">
-        <h2>주문 목록</h2>
-        <span class="badge" th:text="${orderCount}">0</span>
-      </div>
-      <div class="order-list">
-        <a th:classappend="${selectedOrder != null and selectedOrder.orderId() == order.orderId()} ? ' active'"
-           th:each="order : ${orders}"
-           th:href="@{/order-ui/{orderId}(orderId=${order.orderId()})}">
-          <div class="order-title">
-            <span th:text="|Order #${order.orderId()}|">Order #1</span>
-            <strong th:text="${#numbers.formatInteger(order.total(), 0, 'COMMA')} + '원'">0원</strong>
-          </div>
-          <div class="meta">
-            <span th:text="${order.status()}">PENDING</span>
-            <span th:text="|${order.orderLineCount()}개 강의|">0개 강의</span>
-            <span th:text="${#temporals.format(order.createdAt(), 'yyyy.MM.dd HH:mm')}">2026.05.22 10:00</span>
-          </div>
-        </a>
-      </div>
-    </aside>
-
-    <article class="panel" th:if="${selectedOrder != null}">
-      <div class="panel-header">
-        <h2 th:text="|Order #${selectedOrder.orderId()}|">Order #1</h2>
-        <span class="badge" th:text="${selectedOrder.status()}">PENDING</span>
-      </div>
-      <div class="detail-body">
-        <div class="detail-total">
-          <span>결제 금액</span>
-          <strong
-              th:text="${#numbers.formatInteger(selectedOrder.total(), 0, 'COMMA')} + '원'">0원</strong>
-        </div>
-        <div class="meta">
-          <span th:text="|주문자 Member #${selectedOrder.memberId()}|">주문자 Member #1</span>
-          <span th:text="${#temporals.format(selectedOrder.createdAt(), 'yyyy.MM.dd HH:mm')}">2026.05.22 10:00</span>
+    <section class="order-layout" th:if="${!#lists.isEmpty(orders)}">
+      <aside class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">주문 목록</h2>
+          <span class="count-pill" th:text="${orderCount}">0</span>
         </div>
 
-        <div class="line-list">
-          <section class="line-item" th:each="line : ${selectedOrder.orderLines()}">
-            <div class="thumbnail">
-              <img th:alt="${line.title()}" th:if="${line.thumbnailUrl() != null}"
-                   th:src="${line.thumbnailUrl()}">
-              <span th:if="${line.thumbnailUrl() == null}"
-                    th:text="${#strings.substring(line.title(), 0, 1)}">C</span>
+        <div class="order-list">
+          <a class="order-link"
+             th:classappend="${selectedOrder != null and selectedOrder.orderId() == order.orderId()} ? ' active'"
+             th:each="order : ${orders}"
+             th:href="@{/order-ui/{orderId}(orderId=${order.orderId()})}">
+            <div class="order-link-title">
+              <span th:text="|Order #${order.orderId()}|">Order #1</span>
+              <strong th:text="'₩ ' + ${#numbers.formatInteger(order.total(), 0, 'COMMA')}">₩ 0</strong>
             </div>
-            <div class="line-body">
-              <h3 th:text="${line.title()}">강의 제목</h3>
-              <p class="description" th:text="${line.description()}">강의 설명</p>
-              <div class="meta">
-                <span th:text="|Course #${line.courseId()}|">Course #1</span>
-                <strong class="price"
-                        th:text="${#numbers.formatInteger(line.price(), 0, 'COMMA')} + '원'">0원</strong>
+            <div class="order-meta">
+              <span th:text="${order.status()}">PENDING</span>
+              <span th:text="|${order.orderLineCount()}개 강의|">0개 강의</span>
+              <span th:text="${#temporals.format(order.createdAt(), 'yyyy.MM.dd HH:mm')}">2026.05.22 10:00</span>
+            </div>
+          </a>
+        </div>
+      </aside>
+
+      <article class="panel" th:if="${selectedOrder != null}">
+        <div class="panel-header">
+          <h2 class="panel-title" th:text="|Order #${selectedOrder.orderId()}|">Order #1</h2>
+          <span class="status-pill" th:text="${selectedOrder.status()}">PENDING</span>
+        </div>
+
+        <div class="detail-body">
+          <div class="detail-total">
+            <span>최종 결제 금액</span>
+            <strong th:text="'₩' + ${#numbers.formatInteger(selectedOrder.total(), 0, 'COMMA')}">₩0</strong>
+          </div>
+
+          <div class="order-meta">
+            <span th:text="|주문자 Member #${selectedOrder.memberId()}|">주문자 Member #1</span>
+            <span th:text="${#temporals.format(selectedOrder.createdAt(), 'yyyy.MM.dd HH:mm')}">2026.05.22 10:00</span>
+          </div>
+
+          <div class="line-list">
+            <section class="line-item" th:each="line : ${selectedOrder.orderLines()}">
+              <img alt="강의 썸네일"
+                   class="line-thumb"
+                   th:alt="${line.title()}"
+                   th:attr="onerror=|this.onerror=null;this.src='@{/images/nougatbar.png}';|"
+                   th:src="${line.thumbnailUrl() != null ? line.thumbnailUrl() : '/images/nougatbar.png'}">
+
+              <div>
+                <h3 class="line-title" th:text="${line.title()}">강의 제목</h3>
+                <p class="line-description" th:text="${line.description()}">강의 설명</p>
+                <div class="order-meta mt-2">
+                  <span th:text="|Course #${line.courseId()}|">Course #1</span>
+                </div>
               </div>
-            </div>
-          </section>
+
+              <strong class="line-price" th:text="'₩ ' + ${#numbers.formatInteger(line.price(), 0, 'COMMA')}">₩ 0</strong>
+            </section>
+          </div>
         </div>
-      </div>
-    </article>
-  </section>
+      </article>
+    </section>
+  </div>
 </main>
+
+<div th:replace="~{fragments/footer::footer}"></div>
+
+<script crossorigin="anonymous"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
