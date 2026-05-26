@@ -1,7 +1,7 @@
 package com.nougatbar.lxp.member.controller;
 
 import com.nougatbar.lxp.member.dto.SignupRequestDTO;
-import com.nougatbar.lxp.member.exceptional.DuplicateFieldException;
+import com.nougatbar.lxp.member.exception.DuplicateMemberException;
 import com.nougatbar.lxp.member.service.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +33,7 @@ public class SignupController {
         try {
             memberService.register(request);
             return "redirect:/auth/login";
-        } catch (DuplicateFieldException e) {
+        } catch (DuplicateMemberException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("signupRequest", request);
             return "members/signup";

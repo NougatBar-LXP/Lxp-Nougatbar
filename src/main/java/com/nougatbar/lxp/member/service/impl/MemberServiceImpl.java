@@ -4,7 +4,7 @@ import com.nougatbar.lxp.member.dto.LoginMemberDTO;
 import com.nougatbar.lxp.member.dto.SignupRequestDTO;
 import com.nougatbar.lxp.member.dto.response.MemberDTO;
 import com.nougatbar.lxp.member.entity.Member;
-import com.nougatbar.lxp.member.exceptional.DuplicateFieldException;
+import com.nougatbar.lxp.member.exception.DuplicateMemberException;
 import com.nougatbar.lxp.member.repository.MemberRepository;
 import com.nougatbar.lxp.member.service.MemberService;
 import java.util.Optional;
@@ -36,10 +36,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void validateDuplicate(SignupRequestDTO signupRequestDTO) {
         if (memberRepository.existsByEmail(signupRequestDTO.getEmail())) {
-            throw new DuplicateFieldException("이미 사용중인 아이디입니다.");
+            throw new DuplicateMemberException("이미 사용중인 아이디입니다.");
         }
         if (memberRepository.existsByNickname(signupRequestDTO.getNickname())) {
-            throw new DuplicateFieldException("이미 사용중인 닉네임입니다.");
+            throw new DuplicateMemberException("이미 사용중인 닉네임입니다.");
         }
     }
 
