@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LXP Enrollments</title>
+    <style>
+        :root {
+            --bg: #f7f8fa;
+            --panel: #ffffff;
+            --text: #1f2933;
+            --muted: #6b7280;
+            --line: #e5e7eb;
+            --green: #00c471;
+            --green-dark: #00a85f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-width: 320px;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Pretendard", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        h1,
+        h2,
+        p {
+            margin-top: 0;
+        }
+
+        .site-header {
+            border-bottom: 1px solid var(--line);
+            background: #fff;
+        }
+
+        .header-inner,
+        .page {
+            width: min(1080px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .header-inner {
+            display: flex;
+            min-height: 64px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .brand,
+        .nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .brand-mark {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 8px;
+            background: var(--green);
+            color: #fff;
+        }
+
+        .nav a,
+        .member-chip {
+            display: inline-flex;
+            min-height: 34px;
+            align-items: center;
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            padding: 0 12px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .page {
+            display: grid;
+            gap: 24px;
+            padding: 34px 0 70px;
+        }
+
+        .summary {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .summary h1 {
+            margin-bottom: 10px;
+            font-size: 32px;
+            line-height: 1.25;
+        }
+
+        .summary p {
+            margin-bottom: 0;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .panel,
+        .empty {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+        }
+
+        .panel {
+            overflow: hidden;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 680px;
+        }
+
+        th,
+        td {
+            border-bottom: 1px solid var(--line);
+            padding: 16px 18px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #fbfcfd;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        td {
+            font-weight: 700;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            min-height: 28px;
+            align-items: center;
+            border-radius: 4px;
+            padding: 0 10px;
+            background: #ecfdf5;
+            color: var(--green-dark);
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .empty {
+            display: grid;
+            min-height: 260px;
+            place-items: center;
+            padding: 28px;
+            text-align: center;
+        }
+
+        .empty h2 {
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        .empty p {
+            margin-bottom: 18px;
+            color: var(--muted);
+        }
+
+        .primary-button {
+            display: inline-flex;
+            min-height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            padding: 0 16px;
+            background: var(--green);
+            color: #fff;
+            font-weight: 900;
+        }
+
+        @media (max-width: 720px) {
+            .header-inner,
+            .page {
+                width: min(100% - 28px, 1080px);
+            }
+
+            .header-inner,
+            .summary {
+                align-items: start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" th:href="@{/enrollment-ui}">
+            <span class="brand-mark">L</span>
+            <span>LXP Enrollments</span>
+        </a>
+        <nav class="nav">
+            <a th:href="@{/cart-ui}">Cart</a>
+            <a th:href="@{/order-ui}">Orders</a>
+            <span class="member-chip" th:text="|Member #${memberId}|">Member #1</span>
+        </nav>
+    </div>
+</header>
+
+<main class="page">
+    <section class="summary">
+        <div>
+            <h1>내 수강권</h1>
+            <p th:text="|총 ${enrollmentCount}개의 수강권이 있습니다.|">총 0개의 수강권이 있습니다.</p>
+        </div>
+    </section>
+
+    <section class="empty" th:if="${#lists.isEmpty(enrollments)}">
+        <div>
+            <h2>아직 수강권이 없습니다.</h2>
+            <p>장바구니에서 강의를 주문하면 이곳에 수강권이 생성됩니다.</p>
+            <a class="primary-button" th:href="@{/cart-ui}">강의 담으러 가기</a>
+        </div>
+    </section>
+
+    <section class="panel" th:if="${!#lists.isEmpty(enrollments)}">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Enrollment</th>
+                    <th>Course</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="enrollment : ${enrollments}">
+                    <td th:text="|#${enrollment.enrollmentId()}|">#1</td>
+                    <td th:text="|Course #${enrollment.courseId()}|">Course #1</td>
+                    <td>
+                        <span class="badge" th:text="${enrollment.status()} ? '완료' : '수강중'">수강중</span>
+                    </td>
+                    <td th:text="${#temporals.format(enrollment.createdAt(), 'yyyy.MM.dd HH:mm')}">2026.05.23 10:00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

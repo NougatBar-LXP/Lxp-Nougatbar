@@ -1,12 +1,13 @@
 package com.nougatbar.lxp.enrollment.dto.response;
 
 import com.nougatbar.lxp.enrollment.entity.Enrollment;
+import com.nougatbar.lxp.enrollment.entity.EnrollmentStatus;
 import java.time.LocalDateTime;
 
 public record EnrollmentDTO(Long enrollmentId,
                             Long memberId,
                             Long courseId,
-                            Boolean status,
+                            EnrollmentStatus status,
                             LocalDateTime createdAt) {
 
     public static EnrollmentDTO from(Enrollment enrollment) {
