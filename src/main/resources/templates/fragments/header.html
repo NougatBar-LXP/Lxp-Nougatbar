@@ -17,21 +17,24 @@
         </th:block>
 
         <!-- 로그인 후 프로필 표시 -->
-          <div class="dropdown" sec:authorize="isAuthenticated()">
-            <button class="btn btn-outline-secondary rounded-circle p-0 header-profile" type="button" id="headerUserProfileDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <img class="rounded-circle" th:src="@{/images/nougatbar.png}" alt="프로필 이미지" style="width: 100%; height: 100%; object-fit: cover;">
+        <th:block sec:authorize="isAuthenticated()">
+          <a class="btn btn-outline-primary rounded-pill px-4 ms-2" th:href="@{/cart-ui}">장바구니</a>
+          <div class="dropdown">
+            <button aria-expanded="false" aria-haspopup="true" class="btn btn-outline-secondary rounded-circle p-0 header-profile" data-bs-toggle="dropdown" id="headerUserProfileDropdown" type="button">
+              <img alt="프로필 이미지" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;" th:src="@{/images/nougatbar.png}">
             </button>
-            <ul class="dropdown-menu" aria-labelledby="headerUserProfileDropdown">
+            <ul aria-labelledby="headerUserProfileDropdown" class="dropdown-menu">
               <li><a class="dropdown-item" th:href="@{/me}">내 프로필</a></li>
               <li><hr class="dropdown-divider"></li>
               <!-- 로그아웃은 POST 요청이 필요하므로 form으로 처리 -->
               <li>
-                <form th:action="@{/auth/logout}" method="post">
-                  <button type="submit" class="dropdown-item">로그아웃</button>
+                <form method="post" th:action="@{/auth/logout}">
+                  <button class="dropdown-item" type="submit">로그아웃</button>
                 </form>
               </li>
             </ul>
           </div>
+        </th:block>
       </div>
     </div>
   </div>
