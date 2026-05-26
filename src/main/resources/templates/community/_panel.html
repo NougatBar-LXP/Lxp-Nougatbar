@@ -1,0 +1,125 @@
+<section th:fragment="panel" xmlns:th="http://www.thymeleaf.org">
+  <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+    <div>
+      <p class="text-primary small fw-bold text-uppercase mb-1">Course Community</p>
+      <h2 class="fw-bold mb-0">커뮤니티</h2>
+    </div>
+    <a class="btn btn-primary"
+       th:href="@{/courses/{courseId}/community(courseId=${course.courseId}, communityMode='new', type=${currentType}, q=${keyword})}">
+      글쓰기
+    </a>
+  </div>
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="d-flex flex-column flex-lg-row gap-3 justify-content-between">
+        <div class="d-flex flex-wrap gap-2" aria-label="게시글 타입">
+          <a class="btn btn-sm btn-outline-primary"
+             th:classappend="${currentType == 'ALL'} ? ' active'"
+             th:href="@{/courses/{courseId}/community(courseId=${course.courseId}, type='ALL', q=${keyword})}">전체</a>
+          <a class="btn btn-sm btn-outline-primary"
+             th:classappend="${currentType == 'COURSE'} ? ' active'"
+             th:href="@{/courses/{courseId}/community(courseId=${course.courseId}, type='COURSE', q=${keyword})}">코스</a>
+          <a class="btn btn-sm btn-outline-primary"
+             th:classappend="${currentType == 'LECTURE'} ? ' active'"
+             th:href="@{/courses/{courseId}/community(courseId=${course.courseId}, type='LECTURE', q=${keyword})}">강의</a>
+          <a class="btn btn-sm btn-outline-primary"
+             th:classappend="${currentType == 'MISSION'} ? ' active'"
+             th:href="@{/courses/{courseId}/community(courseId=${course.courseId}, type='MISSION', q=${keyword})}">미션</a>
+        </div>
+
+        <form class="d-flex gap-2" th:action="@{/courses/{courseId}/community(courseId=${course.courseId})}" method="get">
+          <input type="hidden" name="type" th:value="${currentType}">
+          <label class="flex-fill mb-0">
+            <span class="visually-hidden">검색</span>
+            <input class="form-control" type="search" name="q" placeholder="내용을 검색해 보세요" th:value="${keyword}">
+          </label>
+          <button class="btn btn-outline-secondary" type="submit">검색</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm mb-4" th:if="${showForm}">
+    <div class="card-body p-4">
+      <h3 class="h5 fw-bold mb-4" th:text="${editMode} ? '게시글 수정' : '새 글 작성'">새 글 작성</h3>
+
+      <form class="d-grid gap-3"
+            th:action="${editMode} ? @{/community-ui/{id}(id=${selectedCommunity.communityId()})} : @{/community-ui}"
+            method="post">
+        <input type="hidden" name="courseId" th:value="${course.courseId}">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">게시글 타입</label>
+            <select class="form-select" name="type" th:disabled="${editMode}" required>
+              <option value="COURSE"
+                      th:selected="${(editMode and selectedCommunity.type().name() == 'COURSE') or (!editMode and currentType == 'COURSE')}">코스</option>
+              <option value="LECTURE"
+                      th:selected="${(editMode and selectedCommunity.type().name() == 'LECTURE') or (!editMode and currentType == 'LECTURE')}">강의</option>
+              <option value="MISSION"
+                      th:selected="${(editMode and selectedCommunity.type().name() == 'MISSION') or (!editMode and currentType == 'MISSION')}">미션</option>
+            </select>
+            <input type="hidden" name="type"
+                   th:if="${editMode}"
+                   th:value="${selectedCommunity.type().name()}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">코스 ID</label>
+            <input class="form-control" type="number" min="1" th:value="${course.courseId}" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">멤버 ID</label>
+            <input class="form-control" type="text"
+                   th:value="${#authentication != null ? #authentication.name : '로그인 필요'}"
+                   readonly>
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label fw-semibold">제목</label>
+          <input class="form-control" type="text" name="title" maxlength="120"
+                 th:value="${editMode ? selectedCommunity.title() : ''}" required>
+        </div>
+
+        <div>
+          <label class="form-label fw-semibold">내용</label>
+          <textarea class="form-control" name="content" rows="7" required
+                    th:text="${editMode ? selectedCommunity.content() : ''}"></textarea>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <a class="btn btn-outline-secondary"
+             th:href="${editMode} ? @{/courses/{courseId}/community(courseId=${course.courseId}, communityId=${selectedCommunity.communityId()}, type=${currentType}, q=${keyword})} : @{/courses/{courseId}/community(courseId=${course.courseId}, type=${currentType}, q=${keyword})}">
+            취소
+          </a>
+          <button class="btn btn-primary" type="submit">저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="alert alert-light text-center text-muted border" role="status" th:if="${#lists.isEmpty(communities)}">
+    게시글이 없습니다.
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3" th:if="${!#lists.isEmpty(communities)}">
+    <div class="col" th:each="community : ${communities}">
+      <a class="card h-100 border-0 shadow-sm text-decoration-none text-body"
+         th:href="@{/courses/{courseId}/community/{communityId}(courseId=${course.courseId}, communityId=${community.communityId()}, type=${currentType}, q=${keyword})}">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex flex-wrap align-items-center gap-2 text-muted small mb-3">
+            <span class="badge text-bg-light"
+                  th:text="${community.type().name() == 'COURSE' ? '코스' : (community.type().name() == 'LECTURE' ? '강의' : '미션')}">코스</span>
+            <span th:text="${#temporals.format(community.createdAt(), 'yyyy. MM. dd.')}">2026. 05. 21.</span>
+          </div>
+
+          <h3 class="h6 fw-bold mb-2" th:text="${community.title()}">게시글 제목</h3>
+          <p class="small text-secondary mb-3"
+             style="min-height: 44px;"
+             th:text="${community.content()}">게시글 내용</p>
+          <div class="small text-muted mt-auto" th:text="|작성자 ${community.memberId()}|">작성자 1</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
