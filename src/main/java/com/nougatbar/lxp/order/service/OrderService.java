@@ -1,6 +1,6 @@
 package com.nougatbar.lxp.order.service;
 
-import com.nougatbar.lxp.cart.dto.response.CartResponse;
+import com.nougatbar.lxp.cart.dto.response.CartDTO;
 import com.nougatbar.lxp.cart.service.CartService;
 import com.nougatbar.lxp.course.service.CourseService;
 import com.nougatbar.lxp.enrollment.service.EnrollmentService;
@@ -10,10 +10,8 @@ import com.nougatbar.lxp.order.entity.Order;
 import com.nougatbar.lxp.order.entity.OrderItem;
 import com.nougatbar.lxp.order.repository.OrderRepository;
 import java.util.List;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class OrderService {
@@ -47,7 +45,7 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "멤버를 찾을 수 없습니다. memberId=" + memberId));
 
-        List<CartResponse> carts = cartService.findCartsById(memberId);
+        List<CartDTO> carts = cartService.findCartsById(memberId);
         if (carts == null || carts.isEmpty()) {
             throw new IllegalArgumentException("카트 안에 상품이 존재하지 않습니다.");
         }
