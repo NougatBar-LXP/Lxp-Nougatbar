@@ -1,5 +1,7 @@
 package com.nougatbar.lxp.course.controller;
 
+import com.nougatbar.lxp.common.exception.BaseException;
+import com.nougatbar.lxp.common.exception.ErrorCode;
 import com.nougatbar.lxp.course.dto.response.CourseDetailDTO;
 import com.nougatbar.lxp.course.dto.response.CourseSummaryDTO;
 import com.nougatbar.lxp.course.service.CourseService;
@@ -40,6 +42,10 @@ public class CourseRestController {
      */
     @GetMapping("/{courseId}")
     public ResponseEntity<CourseDetailDTO> getCourseDetail(@PathVariable Long courseId) {
+        if (courseId == null || courseId <= 0) {
+            throw new BaseException(ErrorCode.INVALID_REQUEST);
+        }
+
         return courseService.getCourseDetailById(courseId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

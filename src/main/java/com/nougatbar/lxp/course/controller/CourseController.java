@@ -55,6 +55,10 @@ public class CourseController {
 
         Map<Long, String> lectureContentUrlMap = new HashMap<>();
         for (SectionDetailViewModel section : courseDetail.courseSections()) {
+            if (section == null) {
+                continue;
+            }
+
             section.lectures().forEach(lecture -> {
                 String contentUrl = staticResourceLocator.locate(lecture.contentUri());
                 lectureContentUrlMap.put(lecture.lectureId(), contentUrl);
