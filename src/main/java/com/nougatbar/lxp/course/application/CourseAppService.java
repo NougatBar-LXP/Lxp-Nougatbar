@@ -1,5 +1,7 @@
 package com.nougatbar.lxp.course.application;
 
+import com.nougatbar.lxp.common.exception.BaseException;
+import com.nougatbar.lxp.common.exception.ErrorCode;
 import com.nougatbar.lxp.course.dto.CourseStatusDTO;
 import com.nougatbar.lxp.course.dto.response.CourseDetailDTO;
 import com.nougatbar.lxp.course.dto.response.CourseDetailViewModel;
@@ -39,8 +41,7 @@ public class CourseAppService {
             }
 
             MemberDTO instructor = memberService.getMemberById(course.memberId())
-                    .orElseThrow(() -> new IllegalStateException(
-                            "강사 정보를 찾을 수 없습니다. ID: " + course.memberId()));
+                    .orElseThrow(() -> new BaseException(ErrorCode.INSTRUCTOR_NOT_FOUND));
 
             courseSummaries.add(CourseSummeryViewModel.from(course, instructor));
         }
@@ -57,11 +58,10 @@ public class CourseAppService {
      */
     public CourseDetailViewModel getCourseDetail(Long courseId) {
         CourseDetailDTO course = courseService.getCourseDetailById(courseId)
-                .orElseThrow(() -> new IllegalStateException("강좌 정보를 찾을 수 없습니다. ID: " + courseId));
+                .orElseThrow(() -> new BaseException(ErrorCode.COURSE_NOT_FOUND));
 
         MemberDTO instructor = memberService.getMemberById(course.memberId())
-                .orElseThrow(() -> new IllegalStateException(
-                        "강사 정보를 찾을 수 없습니다. ID: " + course.memberId()));
+                .orElseThrow(() -> new BaseException(ErrorCode.INSTRUCTOR_NOT_FOUND));
 
         return CourseDetailViewModel.from(course, instructor);
     }

@@ -8,7 +8,9 @@ public enum ErrorCode {
             HttpStatus.BAD_REQUEST,
             "courseId, memberId, type, title, and content are required."
     ),
+    COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "Course not found."),
     COMMUNITY_UPDATE_REQUIRED_VALUE_MISSING(HttpStatus.BAD_REQUEST, "title and content are required."),
+    INSTRUCTOR_NOT_FOUND(HttpStatus.NOT_FOUND, "Instructor not found."),
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "Invalid request.");
 
     private final HttpStatus status;
