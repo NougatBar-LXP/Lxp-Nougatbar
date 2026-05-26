@@ -46,7 +46,6 @@ public class Member {
 
     @Column
     private LocalDateTime updatedAt;
-+
     
     @Column
     private LocalDateTime deletedAt;
