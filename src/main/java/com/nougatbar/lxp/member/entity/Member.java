@@ -15,10 +15,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "members")
 public class Member {
-    protected Member() {
-
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -50,12 +46,11 @@ public class Member {
     @Column
     private LocalDateTime updatedAt;
 
-
     @Column
     private LocalDateTime deletedAt;
 
-    // ❌ Builder 패턴 + NOT NULL 방어 처리 - 미구현
-
+    protected Member() {
+    }
 
     // 생성 시 자동으로 현재 시간 설정
     @PrePersist
