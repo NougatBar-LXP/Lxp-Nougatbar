@@ -10,10 +10,12 @@ import com.nougatbar.lxp.community.dto.request.CommunityUpdateRequest;
 import com.nougatbar.lxp.community.dto.response.CommunityResponse;
 import com.nougatbar.lxp.community.entity.CommunityType;
 import com.nougatbar.lxp.community.repository.CommunityRepository;
+import com.nougatbar.lxp.member.service.MemberService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -25,6 +27,9 @@ class CommunityServiceTest {
 
     @Autowired
     private CommunityRepository communityRepository;
+
+    @MockitoBean
+    private MemberService memberService;
 
     @Test
     void createCommunity_success() {
