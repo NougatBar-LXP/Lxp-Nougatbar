@@ -87,7 +87,7 @@ public class CourseAppService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         boolean isEnrolled = false;
-        if (authentication.isAuthenticated()
+        if (authentication != null && authentication.isAuthenticated()
                 && !(authentication instanceof AnonymousAuthenticationToken)) {
             String username = authentication.getName();
             Optional<MemberDTO> member = memberService.getMemberByEmail(username);
