@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/courses")
@@ -31,11 +32,17 @@ public class CourseController {
      * 모든 강좌의 요약 정보를 조회하여 강좌 목록 페이지를 렌더링하는 엔드포인트.
      *
      * @param model 뷰 모델 객체, 강좌 요약 데이터를 담아 뷰로 전달하는 데 사용
+     * @param q     검색어(선택적), 강좌 제목에 대한 검색어가 제공된 경우 해당 검색어를 포함하는 강좌만 조회
      * @return 강좌 목록 페이지를 렌더링한 뷰 이름
      */
     @GetMapping
-    public String courses(Model model) {
-        List<CourseSummeryViewModel> courseSummaries = courseAppService.listCourseSummaries();
+    public String courses(Model model, @RequestParam(required = false) String q) {
+        List<CourseSummeryViewModel> courseSummaries;
+        if (q == null || q.isBlank()) {
+            courseSummaries = courseAppService.listCourseSummaries();
+        } else {
+            courseSummaries = courseAppService.searchCourseSummariesByTitle(q);
+        }
 
         Map<Long, String> thumbnailUrlMap = courseSummaries.stream()
                 .collect(Collectors.toMap(CourseSummeryViewModel::courseId,
@@ -68,6 +75,7 @@ public class CourseController {
         model.addAttribute("course", courseDetail);
         model.addAttribute("thumbnailUrl", thumbnailUrl);
         model.addAttribute("lectureContentUrlMap", lectureContentUrlMap);
+        model.addAttribute("isEnrolled", courseDetail.isEnrolled());
 
         return "courses/detail";
     }

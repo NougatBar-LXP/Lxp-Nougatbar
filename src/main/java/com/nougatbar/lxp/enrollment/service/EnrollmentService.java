@@ -1,6 +1,8 @@
 package com.nougatbar.lxp.enrollment.service;
 
 import com.nougatbar.lxp.cart.dto.response.CartDTO;
+import com.nougatbar.lxp.common.exception.BaseException;
+import com.nougatbar.lxp.common.exception.ErrorCode;
 import com.nougatbar.lxp.enrollment.dto.response.EnrollmentDTO;
 import com.nougatbar.lxp.enrollment.entity.Enrollment;
 import com.nougatbar.lxp.enrollment.repository.EnrollmentRepository;
@@ -30,6 +32,19 @@ public class EnrollmentService {
         }
 
         return enrollments.stream().map(EnrollmentDTO::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isMemberEnrolledInCourse(Long memberId, Long courseId) {
+        if (memberId == null || memberId <= 0L) {
+            throw new BaseException(ErrorCode.INVALID_REQUEST);
+        }
+
+        if (courseId == null || courseId <= 0L) {
+            throw new BaseException(ErrorCode.INVALID_REQUEST);
+        }
+
+        return repository.existsByMemberIdAndCourseId(memberId, courseId);
     }
 
     @Transactional

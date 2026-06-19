@@ -48,6 +48,7 @@
             th:action="${editMode} ? @{/community-ui/{id}(id=${selectedCommunity.communityId()})} : @{/community-ui}"
             method="post">
         <input type="hidden" name="courseId" th:value="${course.courseId}">
+        <input type="hidden" name="memberId" value="1">
         <div class="row g-3">
           <div class="col-md-4">
             <label class="form-label fw-semibold">게시글 타입</label>
@@ -69,8 +70,8 @@
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">멤버 ID</label>
-            <input class="form-control" type="text"
-                   th:value="${#authentication != null ? #authentication.name : '로그인 필요'}"
+            <input class="form-control" type="number"
+                   value="1"
                    readonly>
           </div>
         </div>

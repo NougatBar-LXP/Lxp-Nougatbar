@@ -93,9 +93,12 @@
               <li class="list-group-item d-flex align-items-center gap-3 py-3 px-4"
                   th:each="lecture : ${section.lectures}">
                 <span class="text-muted">▶</span>
-                <span class="flex-fill fw-medium" th:text="${lecture.title}">강의 제목</span>
+                <span class="fw-medium" th:text="${lecture.title}">강의 제목</span>
+                <a class="btn btn-sm btn-outline-secondary"
+                   th:if="${isEnrolled == true}"
+                   th:href="@{|/lectures/${lecture.lectureId}|}">학습하기</a>
                 <span class="badge bg-light text-secondary border ms-auto"
-                      th:text="${lecture.type}">VIDEO</span>
+                      th:text="${lecture.type}">TYPE</span>
               </li>
             </ul>
 
@@ -105,7 +108,10 @@
               <li class="list-group-item d-flex align-items-center gap-3 py-3 px-4 mission-item"
                   th:each="mission : ${section.missions}">
                 <span class="text-muted">✏</span>
-                <span class="flex-fill fw-medium" th:text="${mission.title}">미션 제목</span>
+                <span class="fw-medium" th:text="${mission.title}">미션 제목</span>
+                <a class="btn btn-sm btn-outline-primary"
+                   th:if="${isEnrolled == true}"
+                   th:href="@{|/mission/${mission.missionId}|}">도전하기</a>
                 <span class="badge bg-warning text-dark ms-auto">미션</span>
               </li>
             </ul>

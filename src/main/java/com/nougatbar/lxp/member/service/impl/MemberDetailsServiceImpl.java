@@ -1,8 +1,8 @@
-package com.nougatbar.lxp.member.service;
+package com.nougatbar.lxp.member.service.impl;
 
 import com.nougatbar.lxp.member.dto.LoginMemberDTO;
 import com.nougatbar.lxp.member.security.MemberDetails;
-import java.util.Collections;
+import com.nougatbar.lxp.member.service.MemberService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 // DB에서 유저 조회
 @Service
 public class MemberDetailsServiceImpl implements UserDetailsService {
-
     private final MemberService memberService;
 
     public MemberDetailsServiceImpl(MemberService memberService) {
@@ -26,8 +25,7 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
         if (loginMember == null) {
             throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
         }
+
         return new MemberDetails(loginMember);
     }
-
-
 }
