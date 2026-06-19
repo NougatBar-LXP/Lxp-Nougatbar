@@ -41,6 +41,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseSummaryDTO> searchCoursesByTitle(String title) {
+        if (title == null || title.isBlank()) {
+            return listAllCourses();
+        }
+
         return courseRepository.findByTitleContainingIgnoreCase(title)
                 .stream()
                 .map(CourseSummaryDTO::from)
